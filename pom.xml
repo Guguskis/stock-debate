@@ -18,6 +18,7 @@
 
     <modules>
         <module>stock-debate-api</module>
+        <module>stock-service</module>
     </modules>
 
     <properties>
