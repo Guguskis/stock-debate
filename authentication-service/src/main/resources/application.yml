@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
@@ -8,5 +8,3 @@ spring:
     password: password
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-source:
-  token: Tpk_e8b0d9ec6d4047d6aaeed40d580dbf94

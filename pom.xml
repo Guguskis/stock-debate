@@ -19,6 +19,7 @@
     <modules>
         <module>stock-debate-api</module>
         <module>stock-service</module>
+        <module>authentication-service</module>
     </modules>
 
     <properties>
