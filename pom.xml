@@ -33,11 +33,12 @@
         <javax.ws.rs-api.version>2.1.1</javax.ws.rs-api.version>
         <hamcrest-integration.version>1.3</hamcrest-integration.version>
         <junit.version>4.12</junit.version>
-        <log4j.version>1.2.17</log4j.version>
         <slf4j-api.version>1.7.30</slf4j-api.version>
         <jsoup.version>1.10.2</jsoup.version>
+        <logback-classic.version>1.2.3</logback-classic.version>
+        <log4j.version>2.13.3</log4j.version>
+        <mockito-all.version>1.10.19</mockito-all.version>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -51,19 +52,24 @@
                 <version>${springfox-swagger.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j-api.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
             </dependency>
             <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
                 <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-classic.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -90,12 +96,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-integration</artifactId>
-                <version>${hamcrest-integration.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
                 <version>${javax.ws.rs-api.version}</version>
@@ -119,6 +119,12 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>${h2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito-all.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

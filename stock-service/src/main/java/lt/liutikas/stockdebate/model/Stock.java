@@ -7,31 +7,31 @@ import javax.persistence.Id;
 public class Stock {
 
     @Id
-    public String ticker;
-    public String name;
-    public Integer price;
+    public String symbol;
+    public String companyName;
+    public Double latestPrice;
 
-    public String getName() {
-        return name;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCompanyName(String name) {
+        this.companyName = name;
     }
 
-    public String getTicker() {
-        return ticker;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setTicker(String ticker) {
-        this.ticker = ticker;
+    public void setSymbol(String ticker) {
+        this.symbol = ticker;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Double getLatestPrice() {
+        return latestPrice;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setLatestPrice(Double price) {
+        this.latestPrice = price;
     }
 }

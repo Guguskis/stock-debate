@@ -1,16 +1,14 @@
 package lt.liutikas.stockdebate.model.dto;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class GetStockRequest {
-    public String ticker;
 
-    public String getTicker() {
-        return ticker;
+    private String symbol;
+
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setTicker(String ticker) {
-        this.ticker = ticker;
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 }
