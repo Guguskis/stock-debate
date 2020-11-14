@@ -26,7 +26,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void canLogin_providedCorrectCombination_returnsTrue() {
+    public void canLogin_providedCorrectCombination_returnsTrueAndUser() {
         CanLoginRequest request = new CanLoginRequest();
         request.setUsername("Trump");
         request.setPassword("TinyHands");
@@ -45,7 +45,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void canLogin_providedNotExistingUsername_returnsFalse() {
+    public void canLogin_providedNotExistingUsername_returnsWrappedFalse() {
         CanLoginRequest request = new CanLoginRequest();
         request.setUsername("Trump");
         request.setPassword("TinyHands");
@@ -61,7 +61,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void canLogin_providedIncorrectPassword_returnsFalse() {
+    public void canLogin_providedIncorrectPassword_returnsWrappedFalse() {
         CanLoginRequest request = new CanLoginRequest();
         request.setUsername("Trump");
         request.setPassword("TinyHands");
@@ -80,7 +80,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void register_providedNotTakenUsername_returnsCreatedUser() {
+    public void register_providedNotTakenUsername_returnsUser() {
         RegisterRequest request = new RegisterRequest();
         request.setUsername("Trump");
         request.setPassword("TinyHands");
@@ -102,7 +102,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void register_providedTakenUsername_returnsBadResponse() {
+    public void register_providedTakenUsername_returnsBadResponseMessage() {
         RegisterRequest request = new RegisterRequest();
         request.setUsername("Trump");
         request.setPassword("TinyHands");
@@ -122,7 +122,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUser_providedExistingUsername_returnsUser() {
+    public void getUser_providedExistingUsername_returnsUserNoPassword() {
         User user = new User();
         user.setId(1);
         user.setUsername("Trump");
@@ -136,11 +136,11 @@ public class UserServiceTest {
 
         assertEquals(user.getId(), response.getId());
         assertEquals(user.getUsername(), response.getUsername());
-        assertEquals(user.getPassword(), response.getPassword());
+        assertNull(response.getPassword());
     }
 
     @Test
-    public void getUser_providedNotExistingUsername_returnsUser() {
+    public void getUser_providedNotExistingUsername_returnsMessage() {
         User user = new User();
         user.setId(1);
         user.setUsername("Trump");

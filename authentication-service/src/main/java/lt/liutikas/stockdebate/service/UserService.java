@@ -70,6 +70,8 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
+        user.setPassword(null);
+
         return ResponseEntity.ok(user);
     }
 }
