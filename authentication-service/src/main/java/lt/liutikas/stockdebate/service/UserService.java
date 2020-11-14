@@ -36,7 +36,7 @@ public class UserService {
         if (canLogin) {
             LOG.info(String.format("User '%s' successful login", request.getUsername()));
         } else {
-            LOG.info(String.format("User '%s' failed to login", request.getUsername()));
+            LOG.info(String.format("User '%s' failed to login. Reason: incorrect password or username", request.getUsername()));
         }
 
         CanLoginResponse canLoginResponse = new CanLoginResponse();
@@ -50,6 +50,7 @@ public class UserService {
         User existingUser = repository.findByUsernameIgnoreCase(request.getUsername());
 
         if (existingUser != null) {
+            LOG.info(String.format("User '%s' failed to register. Reason: username already taken", request.getUsername()));
             return ResponseEntity.badRequest().body("Username already taken");
         }
 
