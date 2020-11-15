@@ -1,12 +1,7 @@
 package lt.liutikas.stockdebate.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class Stock {
 
-    @Id
     private String symbol;
     private String companyName;
     private Double latestPrice;

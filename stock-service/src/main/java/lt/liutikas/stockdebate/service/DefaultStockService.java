@@ -12,8 +12,9 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class DefaultStockService implements StockService {
 
-    private static final String IEXAPIS = "https://sandbox.iexapis.com/stable/stock/{symbol}/quote?token={token}";
     private final Logger LOG = LoggerFactory.getLogger(DefaultStockService.class);
+
+    private static final String IEXAPIS = "https://sandbox.iexapis.com/stable/stock/{symbol}/quote?token={token}";
     private final RestTemplate restTemplate;
     private final StockSourceProperties stockSourceProperties;
 

@@ -59,6 +59,8 @@ public class UserService {
         userToSave.setPassword(request.getPassword());
 
         User savedUser = repository.save(userToSave);
+
+        LOG.info(String.format("User '%s' registered", request.getUsername()));
         return ResponseEntity.ok(savedUser);
     }
 
@@ -72,6 +74,7 @@ public class UserService {
 
         user.setPassword(null);
 
+        LOG.info(String.format("Retrieved user '%s' ", username));
         return ResponseEntity.ok(user);
     }
 }
