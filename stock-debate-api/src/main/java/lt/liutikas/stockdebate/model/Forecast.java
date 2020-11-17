@@ -2,9 +2,8 @@ package lt.liutikas.stockdebate.model;
 
 public class Forecast {
     private Stock stock;
-    private String username;
     private double expirationPrice;
-    private double targetPrice;
+    private double strikePrice;
     private double successCoefficient;
     private String expirationDate;
     private String createdDate;
@@ -18,14 +17,6 @@ public class Forecast {
         this.stock = stock;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public double getExpirationPrice() {
         return expirationPrice;
     }
@@ -34,12 +25,12 @@ public class Forecast {
         this.expirationPrice = expirationPrice;
     }
 
-    public double getTargetPrice() {
-        return targetPrice;
+    public double getStrikePrice() {
+        return strikePrice;
     }
 
-    public void setTargetPrice(double targetPrice) {
-        this.targetPrice = targetPrice;
+    public void setStrikePrice(double strikePrice) {
+        this.strikePrice = strikePrice;
     }
 
     public double getSuccessCoefficient() {

@@ -4,7 +4,7 @@ public class Stock {
 
     private String symbol;
     private String companyName;
-    private Double latestPrice;
+    private double latestPrice;
     private String logoUrl;
 
     public String getCompanyName() {
@@ -23,11 +23,11 @@ public class Stock {
         this.symbol = symbol;
     }
 
-    public Double getLatestPrice() {
+    public double getLatestPrice() {
         return latestPrice;
     }
 
-    public void setLatestPrice(Double latestPrice) {
+    public void setLatestPrice(double latestPrice) {
         this.latestPrice = latestPrice;
     }
 
