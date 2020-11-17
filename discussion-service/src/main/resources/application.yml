@@ -1,0 +1,25 @@
+server:
+  port: 8084
+spring:
+  datasource:
+    # temporary data storage
+    url: jdbc:h2:mem:testdb
+    # temporary data storage
+    #    url: jdbc:h2:file:/data/sample
+    driverClassName: org.h2.Driver
+    username: admin
+  h2:
+    console:
+      enabled: true
+      path: /database
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+security:
+  oauth2:
+    client:
+      grantType: acces_token
+      clientId: NhxpfVe5ldAnbA
+      clientSecret: 6Br7EqV3FF_5ekQeOGUMiEsoo1Gzhg
+      accessTokenUri: https://www.reddit.com/api/v1/access_token
