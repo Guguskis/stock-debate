@@ -19,7 +19,7 @@ public class CommentParser {
     }
 
     public LocalDate parseCreationDate(String text) {
-        Pattern pattern = Pattern.compile("· (\\d+) (.+) ago");
+        Pattern pattern = Pattern.compile("(\\d+) (.+) ago");
         Matcher matcher = pattern.matcher(text);
 
         if (!matcher.find()) {
@@ -28,17 +28,13 @@ public class CommentParser {
 
         String numberString = matcher.group(1);
         String timePeriodString = matcher.group(2);
+
         int number;
-        TimePeriod timePeriod = null;
+        TimePeriod timePeriod;
 
         try {
             number = Integer.parseInt(numberString);
-            for (TimePeriod period : TimePeriod.values()) {
-                if (timePeriodString.contains(period.toString().toLowerCase())) {
-                    timePeriod = period;
-                    break;
-                }
-            }
+            timePeriod = getTimePeriod(timePeriodString);
             if (timePeriod == null) {
                 throw new Exception();
             }
@@ -48,6 +44,15 @@ public class CommentParser {
         }
 
         return getCreationDate(number, timePeriod);
+    }
+
+    private TimePeriod getTimePeriod(String timePeriodString) {
+        for (TimePeriod timePeriod : TimePeriod.values()) {
+            if (timePeriodString.contains(timePeriod.toString().toLowerCase())) {
+                return timePeriod;
+            }
+        }
+        return null;
     }
 
     private LocalDate getCreationDate(int number, TimePeriod timePeriod) {
@@ -74,14 +79,4 @@ public class CommentParser {
         return creationDate;
     }
 
-    public String parseCommentText(String text) {
-        Pattern pattern = Pattern.compile("ago (.+)");
-        Matcher matcher = pattern.matcher(text);
-        if (!matcher.find()) {
-            throw new IllegalArgumentException(String.format("String does not contain comment '%s'", text));
-        }
-
-        String commentText = matcher.group(1);
-        return commentText;
-    }
 }

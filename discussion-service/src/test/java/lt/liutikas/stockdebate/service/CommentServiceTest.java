@@ -6,6 +6,7 @@ import lt.liutikas.stockdebate.repository.CommentRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -37,7 +38,7 @@ public class CommentServiceTest {
     private Clock clock;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         clock = Clock.fixed(Instant.parse(NOW), ZoneOffset.UTC);
         restTemplate = mock(RestTemplate.class);
         commentRepository = mock(CommentRepository.class);
@@ -45,7 +46,7 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void test() {
+    public void getComments_providedExistingUsername_returnsAllComments() {
         Path path = Paths.get("src", "test", "resources", "comments", "retardStockBot.html");
         String retardStockBotProfileHtmlPage = getFileBody(path);
 
@@ -55,9 +56,20 @@ public class CommentServiceTest {
         ResponseEntity response = commentService.getComments("RetardStockBot");
         List<Comment> comments = (List) response.getBody();
 
-        assertEquals(5, comments.size());
+        assertEquals(3, comments.size());
         assertComment(comments.get(0), "2020-11-10", "Mac mini 5xc faster than top desktop pc xddddd");
         assertComment(comments.get(1), "2020-10-17", "Dumb question, but how did you calculate 70?");
+        assertComment(comments.get(2), "2020-10-17", "Nah, no place in particular. I'm just curious if there's a way to cheat a little and have all these problems solved by website/app");
+    }
+
+    @Test
+    public void getComments_providedNotExistingUsername_returnsBadRequest() {
+        when(restTemplate.getForObject(anyString(), eq(String.class)))
+                .thenThrow(new RestClientException("Not found"));
+
+        ResponseEntity response = commentService.getComments("RetardStockBot");
+
+        assertEquals(400, response.getStatusCodeValue());
     }
 
     private void assertComment(Comment comment, String date, String text) {
