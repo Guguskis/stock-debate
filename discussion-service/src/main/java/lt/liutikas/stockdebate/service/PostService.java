@@ -13,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
@@ -28,11 +29,13 @@ public class PostService {
     private final Logger LOG = LoggerFactory.getLogger(PostService.class);
 
     private final RestTemplate restTemplate;
+    private final OAuth2RestOperations oauthRestTemplate;
     private final PostRepository postRepository;
     private final PostParser postParser;
 
-    public PostService(RestTemplate restTemplate, PostRepository postRepository, PostParser postParser) {
+    public PostService(RestTemplate restTemplate, OAuth2RestOperations oauthRestTemplate, PostRepository postRepository, PostParser postParser) {
         this.restTemplate = restTemplate;
+        this.oauthRestTemplate = oauthRestTemplate;
         this.postRepository = postRepository;
         this.postParser = postParser;
     }
@@ -66,11 +69,10 @@ public class PostService {
     private String getSubredditPostsHtmlPage(String subreddit) {
         String url = String.format(REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL, subreddit);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Cookie", "loid=00000000007xzgo7uu.2.1599044240000.Z0FBQUFBQmZnSldKbldKRGU5R0M5SkRqRHI5d1VFQzlaMW1KcTFQRmo4ZFpZVGZla1FYeXNtZ2plX2w4VUVnOFEzNlNGem9NTUlNM1ZOblgtdWdjNmU0N25LSExXQV8wVFJRb2FHYktkcGRDYzJSN2YybEx5TXZCMk02eWZqWEJITHk5QU9tVnUtOHg; eu_cookie_v2=3; edgebucket=pFaU0YQafqtq2eVRYD; recent_srs=t5_2th52%2Ct5_3q2m6%2Ct5_3pzw2%2Ct5_32fdw7%2Ct5_2s7v0%2Ct5_2qhd7%2Ct5_2t0th%2Ct5_2sgjv%2Ct5_2s1me%2Ct5_3361s; reddaid=6TQ2NNHZZLA4JUAB; csv=1; listingsignupbar_dismiss=1; token_v2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAi…c3NUb2tlbiI6IjYyMjUyNzI4NTcwMi1za0c3Vk5JX3B2ZzA4Mi1zZkpfVWpLMTVJVnciLCJleHBpcmVzIjoiMjAyMC0xMS0xMFQxOToyNDo0Ny4wMDBaIiwibG9nZ2VkT3V0IjpmYWxzZSwic2NvcGVzIjpbIioiLCJlbWFpbCJdfQ==; RetardStockBot_recentclicks2=t3_jwk9hx%2Ct3_jwiu7j%2Ct3_jwirsb%2Ct3_jrv5xm%2Ct3_jtivs1; session_tracker=jmnqhklhbjhkpbifgr.0.1605721865093.Z0FBQUFBQmZ0VjhKYUJXLUVQekhfZU5hYk5tb2l4eld3ZTQwNFVnd1pVR2hVS29mN0VJYVk2Z0xFS09rOGNBX2VIVkpxZ1FyZTZnb0E5Qkx2QVhfMFRmMzcyWUpGX0RwQTR2UU9UeWQ4UlNaZHNoR3BEaEtFZTFiRUFBOEtUMWN5a0NZNVROUl9Nb3g; pc=tu");
-        HttpEntity request = new HttpEntity<>(httpHeaders);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+        httpHeaders.set(HttpHeaders.USER_AGENT, "retardedStockBot 0.1"); // Reddit restricts API access for default agents
+        HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
         return response.getBody();
-//        return restTemplate.getForObject(url, String.class);
     }
 
     private Post convertElementToComment(Element postElement) {

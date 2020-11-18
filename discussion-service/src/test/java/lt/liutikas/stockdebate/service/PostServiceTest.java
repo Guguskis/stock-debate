@@ -9,6 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,7 +38,8 @@ public class PostServiceTest {
     public void setUp() {
         restTemplate = mock(RestTemplate.class);
         postRepository = mock(PostRepository.class);
-        postService = new PostService(restTemplate, postRepository, new PostParser());
+        OAuth2RestOperations oAuth2RestOperations = mock(OAuth2RestOperations.class);
+        postService = new PostService(restTemplate, oAuth2RestOperations, postRepository, new PostParser());
     }
 
     @Test
@@ -74,7 +76,7 @@ public class PostServiceTest {
     }
 
 
-    private void assertPost(Post post, String title, Integer score, int commentCount, LocalDateTime creationDate, String link) {
+    private void assertPost(Post post, String title, Integer score, Integer commentCount, LocalDateTime creationDate, String link) {
         assertEquals(title, post.getTitle());
         assertEquals(score, post.getScore());
         assertEquals(commentCount, post.getCommentCount());

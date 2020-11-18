@@ -22,8 +22,12 @@ public class PostParser {
         }
     }
 
-    public int parseCommentCount(String commentCountText) {
-        Pattern pattern = Pattern.compile("(\\d+) comment");
+    public Integer parseCommentCount(String commentCountText) {
+        if (commentCountText.equals("comment")) {
+            return 0;
+        }
+
+        Pattern pattern = Pattern.compile("(\\d*) comment");
         Matcher matcher = pattern.matcher(commentCountText);
 
         if (!matcher.find()) {

@@ -8,7 +8,7 @@ public class Post {
     private LocalDateTime creationDate;
     private String title;
     private String link;
-    private int commentCount;
+    private Integer commentCount;
 
     public Integer getScore() {
         return score;
@@ -42,11 +42,11 @@ public class Post {
         this.link = link;
     }
 
-    public int getCommentCount() {
+    public Integer getCommentCount() {
         return commentCount;
     }
 
-    public void setCommentCount(int commentCount) {
+    public void setCommentCount(Integer commentCount) {
         this.commentCount = commentCount;
     }
 }
