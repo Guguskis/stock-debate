@@ -39,11 +39,12 @@ public class CommentService {
         try {
             pageHtmlBody = restTemplate.getForObject(String.format(REDDIT_USER_PROFILE_URL, username), String.class);
         } catch (RestClientException e) {
+            LOG.error(String.format("Failed to retrieve comments for user '%s'", username), e);
+
             int rawStatusCode = ((HttpClientErrorException) e).getRawStatusCode();
             if (rawStatusCode == 429) {
                 return ResponseEntity.status(429).body("Reddit request limit reached"); // todo maybe oauth2 can increase limit 5 -> 60 per minute?
             }
-            LOG.error(String.format("Failed to retrieve comments for user '%s'", username), e);
             return ResponseEntity.badRequest().body("User not found or banned");
         }
 
@@ -62,10 +63,12 @@ public class CommentService {
     private Comment convertElementToComment(Element commentElement) {
         Elements createdDateElement = commentElement.getElementsByTag("time");
         String commentText = commentElement.getElementsByClass("usertext-body").text();
+        String scoreText = commentElement.getElementsByClass("score unvoted").text();
 
         Comment comment = new Comment();
         comment.setCreationDate(commentParser.parseCreationDate(createdDateElement.text()));
         comment.setText(commentText);
+        comment.setScore(commentParser.parseScore(scoreText));
         return comment;
     }
 }

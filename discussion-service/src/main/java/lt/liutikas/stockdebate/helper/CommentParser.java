@@ -79,4 +79,22 @@ public class CommentParser {
         return creationDate;
     }
 
+    public int parseScore(String text) {
+        Pattern pattern = Pattern.compile("(-?\\d+) point");
+        Matcher matcher = pattern.matcher(text);
+
+        if (!matcher.find()) {
+            throw new IllegalArgumentException(String.format("String does not contain score '%s'", text));
+        }
+
+        String scoreString = matcher.group(1);
+        int score;
+        try {
+            score = Integer.parseInt(scoreString);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(String.format("Unable to parse score from number '%s'", scoreString));
+        }
+
+        return score;
+    }
 }
