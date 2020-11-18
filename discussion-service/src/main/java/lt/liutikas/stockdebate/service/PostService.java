@@ -51,17 +51,17 @@ public class PostService {
             if (rawStatusCode == 429) {
                 return ResponseEntity.status(429).body("Reddit request limit reached"); // todo maybe oauth2 can increase limit 5 -> 60 per minute?
             }
-            return ResponseEntity.badRequest().body("Check logs");
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
         Document document = Jsoup.parse(pageHtmlBody);
         Elements postElements = document.getElementsByClass("link");
 
         List<Post> comments = postElements.stream()
-                .map(this::convertElementToComment)
+                .map(this::convertElementToPost)
                 .collect(Collectors.toList());
 
-        LOG.info(String.format("Retrieved comments for user '%s'", subreddit));
+        LOG.info(String.format("Retrieved posts for subreddit '%s'", subreddit));
 
         return ResponseEntity.ok(comments);
     }
@@ -75,7 +75,7 @@ public class PostService {
         return response.getBody();
     }
 
-    private Post convertElementToComment(Element postElement) {
+    private Post convertElementToPost(Element postElement) {
         String title = postElement.select("a.title").text();
         String scoreText = postElement.getElementsByClass("score unvoted").get(0).attr("title");
         String commentCountText = postElement.getElementsByClass("comments").text();
