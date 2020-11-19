@@ -6,7 +6,7 @@ public class Comment {
 
     private LocalDate creationDate;
     private String text;
-    private int score;
+    private Integer score;
 
     public LocalDate getCreationDate() {
         return creationDate;
@@ -24,11 +24,11 @@ public class Comment {
         this.text = text;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 }

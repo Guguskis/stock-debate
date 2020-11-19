@@ -20,9 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -38,14 +35,12 @@ public class CommentServiceTest {
     private CommentService commentService;
     private RestTemplate restTemplate;
     private CommentRepository commentRepository;
-    private Clock clock;
 
     @Before
     public void setUp() {
-        clock = Clock.fixed(Instant.parse(NOW), ZoneOffset.UTC);
         restTemplate = mock(RestTemplate.class);
         commentRepository = mock(CommentRepository.class);
-        commentService = new CommentService(restTemplate, commentRepository, new CommentParser(clock));
+        commentService = new CommentService(restTemplate, commentRepository, new CommentParser());
     }
 
     @Test
