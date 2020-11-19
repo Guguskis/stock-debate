@@ -41,6 +41,8 @@ public class StockService {
             liveStock.setLogoUrl(databaseStock.getLogoUrl());
         }
 
+        liveStock.setLogoUrl("https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fautoconsignmentofsandiego.com%2Fimages%2FTesla_Logo.png");
+
         LOG.info(String.format("Retrieved stock '%s'", symbol));
         return ResponseEntity.ok(liveStock);
     }
