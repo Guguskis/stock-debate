@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Component
 public class CommentService {
 
-    private static final String REDDIT_USER_PROFILE_URL = "https://old.reddit.com/user/%s";
+    private static final String REDDIT_USER_PROFILE_URL = "https://old.reddit.com/user/%s?limit=100";
     private final Logger LOG = LoggerFactory.getLogger(CommentService.class);
 
     private final RestTemplate restTemplate;
