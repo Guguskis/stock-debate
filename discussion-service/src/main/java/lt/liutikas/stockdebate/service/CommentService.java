@@ -9,6 +9,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -37,7 +40,7 @@ public class CommentService {
     public ResponseEntity getComments(String username) {
         String pageHtmlBody;
         try {
-            pageHtmlBody = restTemplate.getForObject(String.format(REDDIT_USER_PROFILE_URL, username), String.class);
+            pageHtmlBody = getRedditUserCommentsHtmlPage(username);
         } catch (RestClientException e) {
             LOG.error(String.format("Failed to retrieve comments for user '%s'", username), e);
 
@@ -58,6 +61,15 @@ public class CommentService {
         LOG.info(String.format("Retrieved comments for user '%s'", username));
 
         return ResponseEntity.ok(comments);
+    }
+
+    private String getRedditUserCommentsHtmlPage(String username) {
+        String url = String.format(REDDIT_USER_PROFILE_URL, username);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.USER_AGENT, "retardedStockBot 0.1"); // Reddit restricts API access for default agents
+        HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
+        return response.getBody();
     }
 
     private Comment convertElementToComment(Element commentElement) {
