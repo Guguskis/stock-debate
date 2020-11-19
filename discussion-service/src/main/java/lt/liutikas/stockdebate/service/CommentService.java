@@ -2,6 +2,7 @@ package lt.liutikas.stockdebate.service;
 
 import lt.liutikas.stockdebate.helper.CommentParser;
 import lt.liutikas.stockdebate.model.Comment;
+import lt.liutikas.stockdebate.model.RedditUser;
 import lt.liutikas.stockdebate.repository.CommentRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -60,7 +61,11 @@ public class CommentService {
 
         LOG.info(String.format("Retrieved comments for user '%s'", username));
 
-        return ResponseEntity.ok(comments);
+        RedditUser redditUser = new RedditUser();
+        redditUser.setUsername(username);
+        redditUser.setComments(comments);
+
+        return ResponseEntity.ok(redditUser);
     }
 
     private String getRedditUserCommentsHtmlPage(String username) {
@@ -73,12 +78,12 @@ public class CommentService {
     }
 
     private Comment convertElementToComment(Element commentElement) {
-        Elements createdDateElement = commentElement.getElementsByTag("time");
         String commentText = commentElement.getElementsByClass("usertext-body").text();
         String scoreText = commentElement.getElementsByClass("score unvoted").text();
+        String createdDateString = commentElement.getElementsByAttribute("datetime").get(0).attr("datetime");
 
         Comment comment = new Comment();
-        comment.setCreationDate(commentParser.parseCreationDate(createdDateElement.text()));
+        comment.setCreationDate(commentParser.parseCreationDate(createdDateString));
         comment.setText(commentText);
         comment.setScore(commentParser.parseScore(scoreText));
         return comment;

@@ -2,11 +2,15 @@ package lt.liutikas.stockdebate.service;
 
 import lt.liutikas.stockdebate.helper.CommentParser;
 import lt.liutikas.stockdebate.model.Comment;
+import lt.liutikas.stockdebate.model.RedditUser;
 import lt.liutikas.stockdebate.repository.CommentRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -23,8 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,22 +53,23 @@ public class CommentServiceTest {
         Path path = Paths.get("src", "test", "resources", "comments", "retardStockBot.html");
         String retardStockBotProfileHtmlPage = getFileBody(path);
 
-        when(restTemplate.getForObject(anyString(), eq(String.class)))
-                .thenReturn(retardStockBotProfileHtmlPage);
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(new ResponseEntity<>(retardStockBotProfileHtmlPage, HttpStatus.OK));
 
         ResponseEntity response = commentService.getComments("RetardStockBot");
-        List<Comment> comments = (List) response.getBody();
+        RedditUser redditUser = (RedditUser) response.getBody();
+        List<Comment> comments = redditUser.getComments();
 
         assertEquals(3, comments.size());
         assertComment(comments.get(0), "2020-11-10", "Mac mini 5xc faster than top desktop pc xddddd");
         assertComment(comments.get(1), "2020-10-17", "Dumb question, but how did you calculate 70?");
-        assertComment(comments.get(2), "2020-10-17", "Nah, no place in particular. I'm just curious if there's a way to cheat a little and have all these problems solved by website/app");
+        assertComment(comments.get(2), "2020-10-10", "Nah, no place in particular. I'm just curious if there's a way to cheat a little and have all these problems solved by website/app");
     }
 
     @Test
     public void getComments_providedNotExistingUsername_returnsBadRequest() {
-        when(restTemplate.getForObject(anyString(), eq(String.class)))
-                .thenThrow(new RestClientException("Not found"));
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         ResponseEntity response = commentService.getComments("RetardStockBot");
 
