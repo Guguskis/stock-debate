@@ -22,13 +22,39 @@ public class ForecastParserUtil {
 
     public static String getExpirationDate(Clock clock, String expirationDateString) {
         String[] expirationDateStrings = expirationDateString.split("/");
-        String month = expirationDateStrings[0];
-        String day = expirationDateStrings[1];
 
-        if (month.length() == 1) month = "0" + month;
-        if (day.length() == 1) day = "0" + day;
+        String date;
 
-        return String.format("%s-%s-%s", LocalDateTime.now(clock).getYear(), month, day);
+        if (expirationDateStrings.length == 2) {
+            date = getShortDate(clock, expirationDateStrings);
+        } else if (expirationDateStrings.length == 3) {
+            date = getLongDate(expirationDateStrings);
+        } else {
+            throw new RuntimeException(String.format("Failed to parse date for '%s'", expirationDateString));
+        }
+
+        return date;
+    }
+
+    private static String getLongDate(String[] expirationDateStrings) {
+        String month = appendMissingTrailingZero(expirationDateStrings[0]);
+        String day = appendMissingTrailingZero(expirationDateStrings[1]);
+        String year = expirationDateStrings[2];
+
+        return String.format("20%s-%s-%s", year, month, day);
+    }
+
+    private static String getShortDate(Clock clock, String[] expirationDateStrings) {
+        int year = LocalDateTime.now(clock).getYear();
+        String month = appendMissingTrailingZero(expirationDateStrings[0]);
+        String day = appendMissingTrailingZero(expirationDateStrings[1]);
+
+        return String.format("%s-%s-%s", year, month, day);
+    }
+
+    private static String appendMissingTrailingZero(String doubleDigitString) {
+        if (doubleDigitString.length() == 1) doubleDigitString = "0" + doubleDigitString;
+        return doubleDigitString;
     }
 
     public static ParsedForecast getParsedForecast(String symbol, String strikePriceString, String forecastTypeString, String expirationDateString, Clock clock) {

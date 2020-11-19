@@ -78,12 +78,12 @@ public class ForecastParserTest {
 
     @Test
     public void parse_textGivenInFormat_LONGDATE_SYMBOL_PRICE_TYPE_returnsParsedForecast() {
-        String text = "11/9/20 SPY 363 Call";
+        String text = "11/9/21 SPY 363 Call";
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
 
         assertEquals(1, parsedForecasts.size());
-        assertParsedForecast(parsedForecasts.get(0), "SPY", "2020-11-09", 363, ForecastType.CALL);
+        assertParsedForecast(parsedForecasts.get(0), "SPY", "2021-11-09", 363, ForecastType.CALL);
     }
 
 
