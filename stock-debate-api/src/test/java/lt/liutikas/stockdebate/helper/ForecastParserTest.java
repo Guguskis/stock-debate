@@ -20,8 +20,8 @@ public class ForecastParserTest {
 
     @Before
     public void setUp() {
-        Clock fixed = Clock.fixed(Instant.parse(NOW), ZoneOffset.UTC);
-        forecastParser = new ForecastParser(fixed);
+        Clock clock = Clock.fixed(Instant.parse(NOW), ZoneOffset.UTC);
+        forecastParser = new ForecastParser(clock);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class ForecastParserTest {
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
 
-        assertEquals(1, parsedForecasts.size());
+        assertEquals(2, parsedForecasts.size());
         assertEquals(stockSymbol, parsedForecasts.get(0).getStockSymbol());
         assertEquals(expirationDate, parsedForecasts.get(0).getExpirationDate());
         assertEquals(strikePrice, parsedForecasts.get(0).getStrikePrice(), 0.001);
@@ -62,23 +62,22 @@ public class ForecastParserTest {
     }
 
 
-//    @Test
-//    public void parse_textGivenInFormat_SYMBOL_DATE_$PRICETYPE_returnsParsedForecast() {
-//        String stockSymbol = "T";
-//        String expirationDate = "2020-03-19";
-//        double strikePrice = 30;
-//        ForecastType forecastType = ForecastType.CALL;
-//
-//        String text = "Should of loaded up on boomer calls.. T 3/19 $30c take me to the moon with you old timers!";
-//
-//        List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
-//
-//        assertEquals(1, parsedForecasts.size());
-//        assertEquals(stockSymbol, parsedForecasts.get(0).getStockSymbol());
-//        assertEquals(expirationDate, parsedForecasts.get(0).getExpirationDate());
-//        assertEquals(strikePrice, parsedForecasts.get(0).getStrikePrice(), 0.001);
-//        assertEquals(forecastType, parsedForecasts.get(0).getForecastType());
-//    }
+    @Test
+    public void parse_textGivenInFormat_SYMBOL_DATE_$PRICETYPE_returnsParsedForecast() {
+        String stockSymbol = "T";
+        String expirationDate = "2020-03-19";
+        double strikePrice = 30;
+        ForecastType forecastType = ForecastType.CALL;
 
+        String text = "Should of loaded up on boomer calls.. T 3/19 $30c take me to the moon with you old timers!";
+
+        List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
+
+        assertEquals(1, parsedForecasts.size());
+        assertEquals(stockSymbol, parsedForecasts.get(0).getStockSymbol());
+        assertEquals(expirationDate, parsedForecasts.get(0).getExpirationDate());
+        assertEquals(strikePrice, parsedForecasts.get(0).getStrikePrice(), 0.001);
+        assertEquals(forecastType, parsedForecasts.get(0).getForecastType());
+    }
 
 }
