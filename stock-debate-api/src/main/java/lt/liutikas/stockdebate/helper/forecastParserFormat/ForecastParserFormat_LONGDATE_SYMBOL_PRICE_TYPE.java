@@ -6,7 +6,7 @@ import java.time.Clock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ForecastParserFormat_SYMBOL_PRICETYPE_DATE implements ForecastParserFormat {
+public class ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE implements ForecastParserFormat {
 
     private final Clock clock;
     private final String symbolPattern;
@@ -14,7 +14,7 @@ public class ForecastParserFormat_SYMBOL_PRICETYPE_DATE implements ForecastParse
     private final String strikePricePattern;
     private final String expirationDatePattern;
 
-    public ForecastParserFormat_SYMBOL_PRICETYPE_DATE(Clock clock, String symbolPattern, String forecastTypePattern, String strikePricePattern, String expirationDatePattern) {
+    public ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE(Clock clock, String symbolPattern, String forecastTypePattern, String strikePricePattern, String expirationDatePattern) {
         this.clock = clock;
         this.symbolPattern = symbolPattern;
         this.forecastTypePattern = forecastTypePattern;
@@ -36,10 +36,10 @@ public class ForecastParserFormat_SYMBOL_PRICETYPE_DATE implements ForecastParse
     public ParsedForecast parse(String text) {
         Matcher matcher = getMatcher(text);
         matcher.find();
-        String symbol = matcher.group(1);
-        String strikePriceString = matcher.group(2);
-        String forecastTypeString = matcher.group(3);
-        String expirationDateString = matcher.group(4);
+        String expirationDateString = matcher.group(1);
+        String symbol = matcher.group(2);
+        String strikePriceString = matcher.group(3);
+        String forecastTypeString = matcher.group(4);
         return ForecastParserUtil.getParsedForecast(symbol, strikePriceString, forecastTypeString, expirationDateString, clock);
     }
 
@@ -52,6 +52,6 @@ public class ForecastParserFormat_SYMBOL_PRICETYPE_DATE implements ForecastParse
     }
 
     private String getRegex() {
-        return String.format("(%s) \\$?(%s)(%s) (%s)", symbolPattern, strikePricePattern, forecastTypePattern, expirationDatePattern);
+        return String.format("(%s) (%s) \\$?(%s) (%s)", expirationDatePattern, symbolPattern, strikePricePattern, forecastTypePattern);
     }
 }

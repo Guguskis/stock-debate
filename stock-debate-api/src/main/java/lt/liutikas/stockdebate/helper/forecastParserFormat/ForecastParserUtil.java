@@ -24,12 +24,16 @@ public class ForecastParserUtil {
         String[] expirationDateStrings = expirationDateString.split("/");
         String month = expirationDateStrings[0];
         String day = expirationDateStrings[1];
+
+        if (month.length() == 1) month = "0" + month;
+        if (day.length() == 1) day = "0" + day;
+
         return String.format("%s-%s-%s", LocalDateTime.now(clock).getYear(), month, day);
     }
 
     public static ParsedForecast getParsedForecast(String symbol, String strikePriceString, String forecastTypeString, String expirationDateString, Clock clock) {
         ParsedForecast parsedForecast = new ParsedForecast();
-        parsedForecast.setStockSymbol(symbol);
+        parsedForecast.setStockSymbol(symbol.toUpperCase());
         parsedForecast.setStrikePrice(Double.parseDouble(strikePriceString));
         parsedForecast.setForecastType(getForecastType(forecastTypeString));
         parsedForecast.setExpirationDate(getExpirationDate(clock, expirationDateString));

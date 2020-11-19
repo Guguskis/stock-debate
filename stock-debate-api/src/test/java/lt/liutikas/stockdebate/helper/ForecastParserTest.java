@@ -30,7 +30,7 @@ public class ForecastParserTest {
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
 
-        assertEquals(2, parsedForecasts.size());
+        assertEquals(1, parsedForecasts.size());
         ParsedForecast parsedForecast = parsedForecasts.get(0);
         assertParsedForecast(parsedForecast, "F", "2020-10-30", 9, ForecastType.CALL);
     }
@@ -45,16 +45,47 @@ public class ForecastParserTest {
         assertParsedForecast(parsedForecasts.get(0), "NIO", "2020-11-20", 50, ForecastType.PUT);
     }
 
+    @Test
+    public void parse_textGivenInFormat_symbol_PRICETYPE_DATE_returnsParsedForecast() {
+        String text = "Yep. I'm holding msft 230c 12/18";
 
-//    @Test
-//    public void parse_textGivenInFormat_SYMBOL_DATE_$PRICETYPE_returnsParsedForecast() {
-//        String text = "Should of loaded up on boomer calls.. T 3/19 $30c take me to the moon with you old timers!";
-//
-//        List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
-//
-//        assertEquals(1, parsedForecasts.size());
-//        assertParsedForecast(parsedForecasts.get(0), "T", "2020-03-19", 30, ForecastType.CALL);
-//    }
+        List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
+
+        assertEquals(1, parsedForecasts.size());
+        assertParsedForecast(parsedForecasts.get(0), "MSFT", "2020-12-18", 230, ForecastType.CALL);
+    }
+
+    @Test
+    public void parse_textGivenInFormat_SYMBOL_PRICETYPE_DATE_returnsMultipleParsedForecast() {
+        String text = "NVDA 605C 11/13 & NVDA 625C 11/20";
+
+        List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
+
+        assertEquals(2, parsedForecasts.size());
+        assertParsedForecast(parsedForecasts.get(0), "NVDA", "2020-11-13", 605, ForecastType.CALL);
+        assertParsedForecast(parsedForecasts.get(1), "NVDA", "2020-11-20", 625, ForecastType.CALL);
+    }
+
+    @Test
+    public void parse_textGivenInFormat_SYMBOL_DATE_$PRICETYPE_returnsParsedForecast() {
+        String text = "Should of loaded up on boomer calls.. T 3/19 $30c take me to the moon with you old timers!";
+
+        List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
+
+        assertEquals(1, parsedForecasts.size());
+        assertParsedForecast(parsedForecasts.get(0), "T", "2020-03-19", 30, ForecastType.CALL);
+    }
+
+    @Test
+    public void parse_textGivenInFormat_LONGDATE_SYMBOL_PRICE_TYPE_returnsParsedForecast() {
+        String text = "11/9/20 SPY 363 Call";
+
+        List<ParsedForecast> parsedForecasts = forecastParser.parse(text);
+
+        assertEquals(1, parsedForecasts.size());
+        assertParsedForecast(parsedForecasts.get(0), "SPY", "2020-11-09", 363, ForecastType.CALL);
+    }
+
 
     private void assertParsedForecast(ParsedForecast parsedForecast, String stockSymbol, String expirationDate, double strikePrice, ForecastType forecastType) {
         assertEquals(stockSymbol, parsedForecast.getStockSymbol());
