@@ -70,8 +70,7 @@ public class ForecastService {
 
     private List<ParsedForecast> getParsedForecasts(List<Comment> comments) {
         return comments.stream()
-                .map(Comment::getText)
-                .map(forecastParser::parse)
+                .map(comment -> forecastParser.parse(comment.getText(), comment.getCreationDate()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
