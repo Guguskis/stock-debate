@@ -58,7 +58,7 @@ public class StockServiceTest {
     public void getStock_ExistingSymbolProvidedAndStoredInDatabase_ReturnsStock() {
         Stock teslaStock = getTeslaStock();
         Stock teslaStockInDatabase = getTeslaStock();
-        teslaStockInDatabase.setLogoUrl("Some url");
+        teslaStockInDatabase.setLogoUrl("https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fautoconsignmentofsandiego.com%2Fimages%2FTesla_Logo.png");
 
         when(restTemplate.getForObject(anyString(), eq(Stock.class)))
                 .thenReturn(teslaStock);

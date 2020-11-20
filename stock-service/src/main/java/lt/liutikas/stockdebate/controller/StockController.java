@@ -20,7 +20,12 @@ public class StockController {
     }
 
     @GetMapping("/{symbol}")
-    public ResponseEntity getStocks(@PathVariable String symbol) {
+    public ResponseEntity getStock(@PathVariable String symbol) {
         return stockService.getStock(symbol);
+    }
+
+    @GetMapping("/{symbol}/price/{date}")
+    public ResponseEntity getStockPrice(@PathVariable String symbol, @PathVariable String date) {
+        return stockService.getStockPrice(symbol, date);
     }
 }
