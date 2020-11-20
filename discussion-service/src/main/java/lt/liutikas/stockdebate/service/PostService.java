@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Component
 public class PostService {
 
-    private static final String REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL = "https://old.reddit.com/r/%s/top/?sort=top&t=hour";
+    private static final String REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL = "https://old.reddit.com/r/%s/top/?sort=top&t=hour&limit=100";
     private final Logger LOG = LoggerFactory.getLogger(PostService.class);
 
     private final RestTemplate restTemplate;
@@ -57,13 +57,13 @@ public class PostService {
         Document document = Jsoup.parse(pageHtmlBody);
         Elements postElements = document.getElementsByClass("link");
 
-        List<Post> comments = postElements.stream()
+        List<Post> posts = postElements.stream()
                 .map(this::convertElementToPost)
                 .collect(Collectors.toList());
 
-        LOG.info(String.format("Retrieved posts for subreddit '%s'", subreddit));
+        LOG.info(String.format("Retrieved '%s' posts for subreddit '%s'", posts.size(), subreddit));
 
-        return ResponseEntity.ok(comments);
+        return ResponseEntity.ok(posts);
     }
 
     private String getSubredditPostsHtmlPage(String subreddit) {
