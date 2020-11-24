@@ -2,6 +2,7 @@ package lt.liutikas.stockdebate.service;
 
 import lt.liutikas.stockdebate.helper.ForecastParser;
 import lt.liutikas.stockdebate.model.*;
+import lt.liutikas.stockdebate.repository.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,15 +28,14 @@ public class ForecastService {
     private final Logger LOG = LoggerFactory.getLogger(ForecastService.class);
 
     private final RestTemplate discussionTemplate;
-    private final RestTemplate stockTemplate;
     private final ForecastParser forecastParser;
+    private final StockRepository stockRepository;
 
     public ForecastService(@Qualifier("discussion") RestTemplate discussionTemplate,
-                           @Qualifier("stock") RestTemplate stockTemplate,
-                           ForecastParser forecastParser) {
+                           ForecastParser forecastParser, StockRepository stockRepository) {
         this.discussionTemplate = discussionTemplate;
-        this.stockTemplate = stockTemplate;
         this.forecastParser = forecastParser;
+        this.stockRepository = stockRepository;
     }
 
     public ResponseEntity getForecasts(String username) {
@@ -73,8 +73,7 @@ public class ForecastService {
         }
 
         try {
-            String getStockUrl = String.format("/api/stock/%s", parsedForecast.getStockSymbol());
-            Stock stock = stockTemplate.getForObject(getStockUrl, Stock.class);
+            Stock stock = stockRepository.getStock(parsedForecast.getStockSymbol());
 
             Forecast forecast = new Forecast();
 
@@ -87,8 +86,9 @@ public class ForecastService {
             );
 
             if (isExpired(parsedForecast.getExpirationDate())) {
-                String getStockDetailUrl = String.format("/api/stock/%s/price/%s", parsedForecast.getStockSymbol(), parsedForecast.getExpirationDate());
-                SimpleStockDetail simpleStockDetail = stockTemplate.getForObject(getStockDetailUrl, SimpleStockDetail.class);
+                SimpleStockDetail simpleStockDetail = stockRepository.getSimpleStockDetail(
+                        parsedForecast.getStockSymbol(),
+                        parsedForecast.getExpirationDate());
 
                 forecast.setExpirationPrice(simpleStockDetail.getPrice());
                 forecast.setSuccessCoefficient(getSuccessCoefficientForExpired(
