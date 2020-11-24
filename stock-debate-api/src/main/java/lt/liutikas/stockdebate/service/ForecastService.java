@@ -2,18 +2,16 @@ package lt.liutikas.stockdebate.service;
 
 import lt.liutikas.stockdebate.helper.ForecastParser;
 import lt.liutikas.stockdebate.model.*;
+import lt.liutikas.stockdebate.repository.DiscussionRepository;
 import lt.liutikas.stockdebate.repository.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -27,38 +25,38 @@ public class ForecastService {
 
     private final Logger LOG = LoggerFactory.getLogger(ForecastService.class);
 
-    private final RestTemplate discussionTemplate;
     private final ForecastParser forecastParser;
     private final StockRepository stockRepository;
+    private final DiscussionRepository discussionRepository;
 
-    public ForecastService(@Qualifier("discussion") RestTemplate discussionTemplate,
-                           ForecastParser forecastParser, StockRepository stockRepository) {
-        this.discussionTemplate = discussionTemplate;
+    public ForecastService(ForecastParser forecastParser,
+                           StockRepository stockRepository,
+                           DiscussionRepository discussionRepository) {
         this.forecastParser = forecastParser;
         this.stockRepository = stockRepository;
+        this.discussionRepository = discussionRepository;
     }
 
     public ResponseEntity getForecasts(String username) {
-        RedditUser redditUser;
+        List<Comment> comments;
 
         try {
-            String url = String.format("/api/reddituser/%s/comments", username);
-            redditUser = discussionTemplate.getForObject(url, RedditUser.class);
+            comments = discussionRepository.getComments(username);
         } catch (RestClientException e) {
             String message = parseErrorMessage(e);
             LOG.error(String.format("Failed to retrieve comments for user '%s'. Reason: '%s'", username, message));
             return ResponseEntity.badRequest().body(message);
         }
 
-        List<ParsedForecast> parsedForecasts = getParsedForecasts(redditUser.getComments());
+        List<ParsedForecast> parsedForecasts = getParsedForecasts(comments);
         List<Forecast> forecasts = parsedForecasts.stream()
                 .map(this::getForecast)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
+        RedditUser redditUser = new RedditUser();
         redditUser.setUsername(username);
         redditUser.setForecasts(forecasts);
-        redditUser.setComments(Collections.EMPTY_LIST);
 
         LOG.info(String.format("Retrieved %s forecasts for user '%s'", forecasts.size(), username));
 
