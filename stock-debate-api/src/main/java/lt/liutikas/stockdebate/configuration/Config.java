@@ -14,7 +14,7 @@ import java.time.Clock;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
-public class SwaggerConfig {
+public class Config {
 
     @Bean
     public Docket productApi() {
@@ -27,9 +27,17 @@ public class SwaggerConfig {
 
     @Bean
     @Qualifier("discussion")
-    public RestTemplate getRestTemplate() {
+    public RestTemplate getDiscussionRestTemplate() {
         return new RestTemplateBuilder()
                 .rootUri("http://localhost:8084")
+                .build();
+    }
+
+    @Bean
+    @Qualifier("stock")
+    public RestTemplate getStockRestTemplate() {
+        return new RestTemplateBuilder()
+                .rootUri("http://localhost:8083")
                 .build();
     }
 

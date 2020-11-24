@@ -59,7 +59,7 @@ public class CommentService {
                 .map(this::convertElementToComment)
                 .collect(Collectors.toList());
 
-        LOG.info(String.format("Retrieved comments for user '%s'", username));
+        LOG.info(String.format("Retrieved %d comments for user '%s'", comments.size(), username));
 
         RedditUser redditUser = new RedditUser();
         redditUser.setUsername(username);

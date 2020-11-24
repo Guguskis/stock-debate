@@ -39,6 +39,7 @@ public class ForecastParser {
             ForecastParserFormat parserFormat = forecastParserFormats.get(i);
             if (parserFormat.canParse(text)) {
                 ParsedForecast parsedForecast = parserFormat.parse(text, createdDate);
+                parsedForecast.setCreatedDate(createdDate);
                 parsedForecasts.add(parsedForecast);
                 text = parserFormat.removeForecast(text);
                 i = -1;

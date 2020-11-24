@@ -6,6 +6,7 @@ public class RedditUser {
 
     private String username;
     private List<Forecast> forecasts;
+    private List<Comment> comments;
 
     public String getUsername() {
         return username;
@@ -21,5 +22,13 @@ public class RedditUser {
 
     public void setForecasts(List<Forecast> forecasts) {
         this.forecasts = forecasts;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

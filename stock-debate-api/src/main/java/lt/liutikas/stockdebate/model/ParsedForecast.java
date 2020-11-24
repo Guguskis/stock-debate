@@ -1,11 +1,14 @@
 package lt.liutikas.stockdebate.model;
 
+import java.time.LocalDate;
+
 public class ParsedForecast {
 
     private String stockSymbol;
     private String expirationDate;
     private double strikePrice;
     private ForecastType forecastType;
+    private LocalDate createdDate;
 
     public String getStockSymbol() {
         return stockSymbol;
@@ -37,5 +40,13 @@ public class ParsedForecast {
 
     public void setForecastType(ForecastType forecastType) {
         this.forecastType = forecastType;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
 }

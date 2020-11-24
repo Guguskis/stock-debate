@@ -45,7 +45,7 @@ public class StockServiceTest {
     }
 
     @Test
-    public void getStock_NotExistingSymbolProvidedAndNotStoredInDatabase_ReturnsNotFound() {
+    public void getStock_NotExistingSymbolProvided_ReturnsNotFound() {
         when(restTemplate.getForObject(anyString(), eq(Stock.class)))
                 .thenThrow(new RestClientException("Not found"));
 
