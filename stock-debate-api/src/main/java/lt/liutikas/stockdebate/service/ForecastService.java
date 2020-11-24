@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -112,7 +113,7 @@ public class ForecastService {
     }
 
     private String getCreatedDateString(LocalDate createdDate) {
-        return String.format("%s-%s-%s", createdDate.getYear(), createdDate.getMonthValue(), createdDate.getDayOfMonth());
+        return createdDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     private List<ParsedForecast> getParsedForecasts(List<Comment> comments) {
