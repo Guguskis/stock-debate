@@ -1,5 +1,7 @@
 package lt.liutikas.stockdebate.controller;
 
+import lt.liutikas.stockdebate.model.OpinionsDateRange;
+import lt.liutikas.stockdebate.service.OpinionService;
 import lt.liutikas.stockdebate.service.SubredditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,17 +12,19 @@ import org.springframework.web.bind.annotation.*;
 public class SubredditController {
 
     private final SubredditService subredditService;
+    private final OpinionService opinionService;
 
     @Autowired
-    public SubredditController(SubredditService subredditService) {
+    public SubredditController(SubredditService subredditService, OpinionService opinionService) {
         this.subredditService = subredditService;
+        this.opinionService = opinionService;
     }
 
-//    @GetMapping("/subreddit/{subreddit}/opinions")
-//    public ResponseEntity getOpinions(@PathVariable String subreddit,
-//                                      @RequestParam("dateRange") DateRange dateRange) {
-//        return opinionService.getOpinions(subreddit, dateRange);
-//    }
+    @GetMapping("/subreddit/{name}/opinions")
+    public ResponseEntity getOpinions(@PathVariable String name,
+                                      @RequestParam("opinionsDateRange") OpinionsDateRange opinionsDateRange) {
+        return opinionService.getOpinions(name, opinionsDateRange);
+    }
 
     @GetMapping("/subreddits")
     public ResponseEntity getSubreddits() {
