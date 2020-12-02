@@ -9,6 +9,8 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.time.Clock;
+
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
@@ -31,4 +33,8 @@ public class WebConfig {
                 .build();
     }
 
+    @Bean
+    public Clock getClock() {
+        return Clock.systemUTC();
+    }
 }

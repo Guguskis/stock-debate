@@ -1,4 +1,6 @@
-package lt.liutikas.stockdebate.model;
+package lt.liutikas.stockdebate.model.opinion;
+
+import lt.liutikas.stockdebate.model.Subreddit;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

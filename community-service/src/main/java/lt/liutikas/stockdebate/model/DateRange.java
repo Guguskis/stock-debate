@@ -21,8 +21,8 @@ public enum DateRange {
         this.timeStepInSeconds = unit.getDuration().getSeconds() * amount;
     }
 
-    public LocalDateTime getDateTime() {
-        return LocalDateTime.now().minus(amount, unit);
+    public LocalDateTime getStartDate(LocalDateTime now) {
+        return now.minus(amount, unit);
     }
 
     public long getTimeStepInSeconds(long stepsCount) {

@@ -22,8 +22,9 @@ public class SubredditController {
 
     @GetMapping("/subreddit/{name}/opinions")
     public ResponseEntity getOpinions(@PathVariable String name,
+                                      @RequestParam String stockSymbol,
                                       @RequestParam("dateRange") DateRange dateRange) {
-        return opinionService.getOpinions(name, dateRange);
+        return opinionService.getOpinions(name, stockSymbol, dateRange);
     }
 
     @GetMapping("/subreddits")
