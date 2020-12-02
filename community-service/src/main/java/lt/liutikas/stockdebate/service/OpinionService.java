@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
@@ -57,42 +58,53 @@ public class OpinionService {
     private ArrayList<OpinionDetail> getOpinionDetails(DateRange dateRange, List<Opinion> opinions) {
         ArrayList<OpinionDetail> opinionDetails = new ArrayList<>();
 
-
         // assuming oldest opinions are in the beginning of list
         int steps = 100;
         long timeStepInSeconds = dateRange.getTimeStepInSeconds(steps);
         LocalDateTime startDate = dateRange.getStartDate(LocalDateTime.now(clock));
 
         for (int i = 1; i < steps; i++) {
-
             LocalDateTime fromDate = startDate.plusSeconds((i - 1) * timeStepInSeconds);
             LocalDateTime toDate = startDate.plusSeconds((i) * timeStepInSeconds);
 
-            List<Opinion> opinionsInCurrentStepRange = opinions.stream()
-                    .filter(opinion ->
-                            opinion.getCreated().isAfter(fromDate) &&
-                                    opinion.getCreated().isBefore(toDate))
-                    .collect(Collectors.toList());
-
-            OpinionDetail opinionDetail = new OpinionDetail();
-            opinionDetail.setDate(toDate);
-
-            List<AggregatedOpinion> aggregatedOpinions = Arrays.stream(OpinionType.values()).map(opinionType -> {
-                AggregatedOpinion aggregatedOpinion = new AggregatedOpinion();
-
-                List<Opinion> opinionsOfType = opinionsInCurrentStepRange.stream()
-                        .filter(opinion -> opinion.getOpinionType() == opinionType)
-                        .collect(Collectors.toList());
-                aggregatedOpinion.setType(opinionType);
-                aggregatedOpinion.setCount(opinionsOfType.size());
-                return aggregatedOpinion;
-            }).collect(Collectors.toList());
-
-            opinionDetail.setAggregatedOpinions(aggregatedOpinions);
-
-            opinionDetails.add(opinionDetail);
+            opinionDetails.add(getOpinionDetail(opinions, fromDate, toDate));
         }
 
         return opinionDetails;
+    }
+
+    private OpinionDetail getOpinionDetail(List<Opinion> opinions, LocalDateTime fromDate, LocalDateTime toDate) {
+
+        List<Opinion> opinionsInCurrentStepRange = opinions.stream()
+                .filter(isOpinionInRange(fromDate, toDate))
+                .collect(Collectors.toList());
+
+        List<AggregatedOpinion> aggregatedOpinions = Arrays.stream(OpinionType.values())
+                .map(opinionType -> getAggregatedOpinion(opinionsInCurrentStepRange, opinionType))
+                .collect(Collectors.toList());
+
+        OpinionDetail opinionDetail = new OpinionDetail();
+
+        opinionDetail.setDate(toDate);
+        opinionDetail.setAggregatedOpinions(aggregatedOpinions);
+
+        return opinionDetail;
+    }
+
+    private Predicate<Opinion> isOpinionInRange(LocalDateTime fromDate, LocalDateTime toDate) {
+        return opinion -> opinion.getCreated().isAfter(fromDate) && opinion.getCreated().isBefore(toDate);
+    }
+
+    private AggregatedOpinion getAggregatedOpinion(List<Opinion> opinions, OpinionType opinionType) {
+        AggregatedOpinion aggregatedOpinion = new AggregatedOpinion();
+
+        List<Opinion> opinionsOfSameType = opinions.stream()
+                .filter(opinion -> opinion.getOpinionType() == opinionType)
+                .collect(Collectors.toList());
+
+        aggregatedOpinion.setType(opinionType);
+        aggregatedOpinion.setCount(opinionsOfSameType.size());
+
+        return aggregatedOpinion;
     }
 }
