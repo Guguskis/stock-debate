@@ -27,3 +27,5 @@ target/
 /logs/
 /payment/logs/
 /dropbox/files/
+mvnw
+mvnw.cmd
