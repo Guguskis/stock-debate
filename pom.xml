@@ -24,7 +24,7 @@
     </modules>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>14</java.version>
         <spring-boot.version>2.3.4.RELEASE</spring-boot.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
