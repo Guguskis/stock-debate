@@ -3,7 +3,7 @@ package lt.liutikas.stockdebate.model.opinion;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class OpinionDetail {
+public class OpinionsDetail {
 
     private LocalDateTime date;
     private List<AggregatedOpinion> aggregatedOpinions;

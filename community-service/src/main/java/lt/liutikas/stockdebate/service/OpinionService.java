@@ -45,18 +45,18 @@ public class OpinionService {
                 findAllBySubredditAndStockSymbolAndCreatedAfterOrderByCreatedAsc(
                         subreddit, stockSymbol, startDateTime);
 
-        ArrayList<OpinionDetail> opinionDetails = getOpinionDetails(dateRange, opinions);
+        ArrayList<OpinionsDetail> opinionsDetails = getOpinionDetails(dateRange, opinions);
 
         SubredditOpinions subredditOpinions = new SubredditOpinions();
         subredditOpinions.setStockSymbol(stockSymbol);
         subredditOpinions.setSubredditName(subredditName);
-        subredditOpinions.setOpinionDetails(opinionDetails);
+        subredditOpinions.setOpinionDetails(opinionsDetails);
 
         return ResponseEntity.ok(subredditOpinions);
     }
 
-    private ArrayList<OpinionDetail> getOpinionDetails(DateRange dateRange, List<Opinion> opinions) {
-        ArrayList<OpinionDetail> opinionDetails = new ArrayList<>();
+    private ArrayList<OpinionsDetail> getOpinionDetails(DateRange dateRange, List<Opinion> opinions) {
+        ArrayList<OpinionsDetail> opinionsDetails = new ArrayList<>();
 
         // assuming oldest opinions are in the beginning of list
         int steps = 100;
@@ -67,13 +67,13 @@ public class OpinionService {
             LocalDateTime fromDate = startDate.plusSeconds((i - 1) * timeStepInSeconds);
             LocalDateTime toDate = startDate.plusSeconds((i) * timeStepInSeconds);
 
-            opinionDetails.add(getOpinionDetail(opinions, fromDate, toDate));
+            opinionsDetails.add(getOpinionDetail(opinions, fromDate, toDate));
         }
 
-        return opinionDetails;
+        return opinionsDetails;
     }
 
-    private OpinionDetail getOpinionDetail(List<Opinion> opinions, LocalDateTime fromDate, LocalDateTime toDate) {
+    private OpinionsDetail getOpinionDetail(List<Opinion> opinions, LocalDateTime fromDate, LocalDateTime toDate) {
 
         List<Opinion> opinionsInCurrentStepRange = opinions.stream()
                 .filter(isOpinionInRange(fromDate, toDate))
@@ -83,12 +83,12 @@ public class OpinionService {
                 .map(opinionType -> getAggregatedOpinion(opinionsInCurrentStepRange, opinionType))
                 .collect(Collectors.toList());
 
-        OpinionDetail opinionDetail = new OpinionDetail();
+        OpinionsDetail opinionsDetail = new OpinionsDetail();
 
-        opinionDetail.setDate(toDate);
-        opinionDetail.setAggregatedOpinions(aggregatedOpinions);
+        opinionsDetail.setDate(toDate);
+        opinionsDetail.setAggregatedOpinions(aggregatedOpinions);
 
-        return opinionDetail;
+        return opinionsDetail;
     }
 
     private Predicate<Opinion> isOpinionInRange(LocalDateTime fromDate, LocalDateTime toDate) {

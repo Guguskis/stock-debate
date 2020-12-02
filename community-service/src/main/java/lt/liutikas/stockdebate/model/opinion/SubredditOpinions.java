@@ -6,7 +6,7 @@ public class SubredditOpinions {
 
     private String subredditName;
     private String stockSymbol;
-    private List<OpinionDetail> opinionDetails;
+    private List<OpinionsDetail> opinionsDetails;
 
     public String getSubredditName() {
         return subredditName;
@@ -24,11 +24,11 @@ public class SubredditOpinions {
         this.stockSymbol = stockSymbol;
     }
 
-    public List<OpinionDetail> getOpinionDetails() {
-        return opinionDetails;
+    public List<OpinionsDetail> getOpinionDetails() {
+        return opinionsDetails;
     }
 
-    public void setOpinionDetails(List<OpinionDetail> opinionDetails) {
-        this.opinionDetails = opinionDetails;
+    public void setOpinionDetails(List<OpinionsDetail> opinionsDetails) {
+        this.opinionsDetails = opinionsDetails;
     }
 }
