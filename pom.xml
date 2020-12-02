@@ -21,6 +21,7 @@
         <module>stock-service</module>
         <module>authentication-service</module>
         <module>discussion-service</module>
+        <module>community-service</module>
     </modules>
 
     <properties>
