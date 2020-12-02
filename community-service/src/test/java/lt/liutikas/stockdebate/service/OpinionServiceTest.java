@@ -53,6 +53,7 @@ public class OpinionServiceTest {
 
         assertEquals(stockSymbol, subredditOpinions.getStockSymbol());
         assertEquals(EXISTING_SUBREDDIT_NAME, subredditOpinions.getSubredditName());
+        assertEquals(DateRange.DAY, subredditOpinions.getDateRange());
     }
 
     @Test
@@ -76,7 +77,7 @@ public class OpinionServiceTest {
         ResponseEntity responseEntity = opinionService.getOpinions(EXISTING_SUBREDDIT_NAME, stockSymbol, DateRange.DAY);
         SubredditOpinions subredditOpinions = (SubredditOpinions) responseEntity.getBody();
 
-        List<AggregatedOpinion> opinionDetails = subredditOpinions.getOpinionDetails().get(0).getAggregatedOpinions();
+        List<AggregatedOpinion> opinionDetails = subredditOpinions.getOpinionsDetails().get(0).getAggregatedOpinions();
         assertEquals(3, opinionDetails.size());
 
         assertAggregatedOpinion(opinionDetails.get(0), 1, OpinionType.NEUTRAL);

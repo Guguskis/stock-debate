@@ -50,7 +50,8 @@ public class OpinionService {
         SubredditOpinions subredditOpinions = new SubredditOpinions();
         subredditOpinions.setStockSymbol(stockSymbol);
         subredditOpinions.setSubredditName(subredditName);
-        subredditOpinions.setOpinionDetails(opinionsDetails);
+        subredditOpinions.setDateRange(dateRange);
+        subredditOpinions.setOpinionsDetails(opinionsDetails);
 
         return ResponseEntity.ok(subredditOpinions);
     }
