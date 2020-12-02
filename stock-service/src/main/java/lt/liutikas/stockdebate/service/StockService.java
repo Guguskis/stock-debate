@@ -42,16 +42,18 @@ public class StockService {
 
         Stock databaseStock = stockRepository.findBySymbolIgnoreCase(symbol);
         if (databaseStock == null) {
-            // todo retrieve logoUrl from web
+            liveStock.setLogoUrl(getLogoUrl(symbol));
             stockRepository.save(liveStock);
         } else {
             liveStock.setLogoUrl(databaseStock.getLogoUrl());
         }
 
-        liveStock.setLogoUrl("https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fautoconsignmentofsandiego.com%2Fimages%2FTesla_Logo.png");
-
         LOG.info(String.format("Retrieved stock '%s'", symbol));
         return ResponseEntity.ok(liveStock);
+    }
+
+    private String getLogoUrl(String symbol) {
+        return "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.norrislakemarinas.org%2Fwp-content%2Fthemes%2Fnorris%2Fimg%2Flogo_placeholder.png&f=1&nofb=1";
     }
 
     public ResponseEntity getStockPrice(String symbol, String dateString) {
