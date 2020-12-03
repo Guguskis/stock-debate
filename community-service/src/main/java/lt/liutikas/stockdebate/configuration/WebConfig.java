@@ -34,6 +34,14 @@ public class WebConfig {
     }
 
     @Bean
+    @Qualifier("stock")
+    public RestTemplate getStockRestTemplate() {
+        return new RestTemplateBuilder()
+                .rootUri("http://localhost:8083")
+                .build();
+    }
+
+    @Bean
     public Clock getClock() {
         return Clock.systemUTC();
     }
