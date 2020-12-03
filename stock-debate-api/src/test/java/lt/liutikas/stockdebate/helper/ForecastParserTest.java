@@ -114,7 +114,7 @@ public class ForecastParserTest {
                 "PayPal 11/20 $192.5 c\n" +
                 "Currently down 80% total\n" +
                 "Can Li hit $40 by 11/27\uD83C\uDD98\uD83D\uDC42\uD83C\uDFFB\n" +
-                "\n"; // todo fill
+                "\n";
         LocalDate createdDate = LocalDate.of(2020, 8, 15);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);

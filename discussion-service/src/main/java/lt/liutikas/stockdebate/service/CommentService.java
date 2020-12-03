@@ -47,7 +47,7 @@ public class CommentService {
 
             int rawStatusCode = ((HttpClientErrorException) e).getRawStatusCode();
             if (rawStatusCode == 429) {
-                return ResponseEntity.status(429).body("Reddit request limit reached"); // todo maybe oauth2 can increase limit 5 -> 60 per minute?
+                return ResponseEntity.status(429).body("Reddit request limit reached");
             }
             return ResponseEntity.badRequest().body("User not found or banned");
         }
