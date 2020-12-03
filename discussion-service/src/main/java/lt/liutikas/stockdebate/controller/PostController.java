@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/subreddit/")
+@RequestMapping("/api")
 public class PostController {
 
     private final PostService postService;
@@ -19,8 +19,9 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/{subreddit}/posts")
+    @GetMapping("/subreddit/{subreddit}/posts")
     public ResponseEntity getComments(@PathVariable String subreddit) {
         return postService.getPosts(subreddit);
     }
+
 }
