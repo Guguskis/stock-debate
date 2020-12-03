@@ -37,7 +37,9 @@ public class OpinionService {
 
         Subreddit subreddit = subredditRepository.findByNameIgnoreCase(subredditName);
         if (subreddit == null) {
-            return ResponseEntity.notFound().build();
+            String errorMessage = String.format("Subreddit r/%s not found", subredditName);
+            LOG.error(errorMessage);
+            return ResponseEntity.badRequest().body(errorMessage);
         }
 
         LocalDateTime startDateTime = dateRange.getStartDate(LocalDateTime.now(clock));
