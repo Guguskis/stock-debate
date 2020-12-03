@@ -20,8 +20,12 @@ public class PostController {
     }
 
     @GetMapping("/subreddit/{subreddit}/posts")
-    public ResponseEntity getComments(@PathVariable String subreddit) {
+    public ResponseEntity getPosts(@PathVariable String subreddit) {
         return postService.getPosts(subreddit);
     }
 
+    @GetMapping("/post/{postUrl}/comments")
+    public ResponseEntity getComments(@PathVariable String postUrl) {
+        return postService.getCommentsForPost(postUrl);
+    }
 }

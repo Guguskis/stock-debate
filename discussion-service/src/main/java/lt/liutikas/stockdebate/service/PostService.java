@@ -1,49 +1,41 @@
 package lt.liutikas.stockdebate.service;
 
 import lt.liutikas.stockdebate.helper.PostParser;
+import lt.liutikas.stockdebate.model.Comment;
 import lt.liutikas.stockdebate.model.Post;
-import lt.liutikas.stockdebate.repository.PostRepository;
+import lt.liutikas.stockdebate.repository.RedditRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class PostService {
 
-    private static final String REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL = "https://old.reddit.com/r/%s/top/?sort=top&t=hour&limit=100";
     private final Logger LOG = LoggerFactory.getLogger(PostService.class);
 
-    private final RestTemplate restTemplate;
-    private final OAuth2RestOperations oauthRestTemplate;
-    private final PostRepository postRepository;
+    private final RedditRepository redditRepository;
     private final PostParser postParser;
 
-    public PostService(RestTemplate restTemplate, OAuth2RestOperations oauthRestTemplate, PostRepository postRepository, PostParser postParser) {
-        this.restTemplate = restTemplate;
-        this.oauthRestTemplate = oauthRestTemplate;
-        this.postRepository = postRepository;
+    public PostService(RedditRepository redditRepository, PostParser postParser) {
+        this.redditRepository = redditRepository;
         this.postParser = postParser;
     }
 
     public ResponseEntity getPosts(String subreddit) {
         String pageHtmlBody;
         try {
-            pageHtmlBody = getSubredditPostsHtmlPage(subreddit);
+            pageHtmlBody = redditRepository.getSubredditPostsHtmlPage(subreddit);
         } catch (RestClientException e) {
             LOG.error(String.format("Failed to retrieve posts for subreddit '%s'", subreddit), e);
 
@@ -66,13 +58,14 @@ public class PostService {
         return ResponseEntity.ok(posts);
     }
 
-    private String getSubredditPostsHtmlPage(String subreddit) {
-        String url = String.format(REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL, subreddit);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.USER_AGENT, "retardedStockBot 0.1"); // Reddit restricts API access for default agents
-        HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
-        return response.getBody();
+    public ResponseEntity getCommentsForPost(String postUrl) {
+        Post post = new Post();
+        List comments = new ArrayList<Comment>();
+
+        // todo
+
+        post.setComments(comments);
+        return ResponseEntity.ok(comments);
     }
 
     private Post convertElementToPost(Element postElement) {
@@ -90,5 +83,4 @@ public class PostService {
         post.setLink(link);
         return post;
     }
-
 }

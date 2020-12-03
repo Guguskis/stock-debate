@@ -2,16 +2,12 @@ package lt.liutikas.stockdebate.service;
 
 import lt.liutikas.stockdebate.helper.PostParser;
 import lt.liutikas.stockdebate.model.Post;
-import lt.liutikas.stockdebate.repository.PostRepository;
+import lt.liutikas.stockdebate.repository.RedditRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,33 +20,31 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PostServiceTest {
 
     private PostService postService;
-    private RestTemplate restTemplate;
-    private PostRepository postRepository;
+    private RedditRepository redditRepository;
 
     @Before
     public void setUp() {
-        restTemplate = mock(RestTemplate.class);
-        postRepository = mock(PostRepository.class);
-        OAuth2RestOperations oAuth2RestOperations = mock(OAuth2RestOperations.class);
-        postService = new PostService(restTemplate, oAuth2RestOperations, postRepository, new PostParser());
+        redditRepository = mock(RedditRepository.class);
+        postService = new PostService(redditRepository, new PostParser());
     }
 
     @Test
     public void getPosts_providedExistingSubreddit_returnsAllPosts() {
+        String subreddit = "wallstreetbets";
+
         Path path = Paths.get("src", "test", "resources", "posts", "wallstreetbets.html");
         String wallstreetbetsPostsHtmlPage = getFileBody(path);
 
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(new ResponseEntity<>(wallstreetbetsPostsHtmlPage, HttpStatus.OK));
+        when(redditRepository.getSubredditPostsHtmlPage(subreddit))
+                .thenReturn(wallstreetbetsPostsHtmlPage);
 
-        ResponseEntity response = postService.getPosts("RetardStockBot");
+        ResponseEntity response = postService.getPosts(subreddit);
         List<Post> posts = (List) response.getBody();
 
         assertEquals(25, posts.size());
@@ -66,11 +60,12 @@ public class PostServiceTest {
 
     @Test
     public void getPosts_providedNotExistingSubreddit_returnsBadRequest() {
+        String subreddit = "wallstreetbets";
 
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+        when(redditRepository.getSubredditPostsHtmlPage(subreddit))
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
-        ResponseEntity response = postService.getPosts("RetardStockBot");
+        ResponseEntity response = postService.getPosts(subreddit);
 
         assertEquals(400, response.getStatusCodeValue());
     }
