@@ -1,9 +1,11 @@
 package lt.liutikas.stockdebate.service;
 
 import lt.liutikas.stockdebate.model.FullStockDetail;
+import lt.liutikas.stockdebate.model.IsStock;
 import lt.liutikas.stockdebate.model.SimpleStockDetail;
 import lt.liutikas.stockdebate.model.Stock;
 import lt.liutikas.stockdebate.repository.InformationRepository;
+import lt.liutikas.stockdebate.repository.IsStockRepository;
 import lt.liutikas.stockdebate.repository.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +18,14 @@ import java.util.List;
 public class StockService {
 
     private final Logger LOG = LoggerFactory.getLogger(StockService.class);
+
     private final StockRepository stockRepository;
+    private final IsStockRepository isStockRepository;
     private final InformationRepository informationRepository;
 
-    public StockService(StockRepository stockRepository, InformationRepository informationRepository) {
+    public StockService(StockRepository stockRepository, IsStockRepository isStockRepository, InformationRepository informationRepository) {
         this.stockRepository = stockRepository;
+        this.isStockRepository = isStockRepository;
         this.informationRepository = informationRepository;
     }
 
@@ -73,5 +78,21 @@ public class StockService {
         simpleStockDetail.setPrice(fullStockDetail.getClose());
         simpleStockDetail.setDate(fullStockDetail.getDate());
         return simpleStockDetail;
+    }
+
+    public ResponseEntity isStockExists(String symbol) {
+        IsStock isStock = isStockRepository.findByStockSymbol(symbol);
+
+        if (isStock == null) {
+            Stock stock = informationRepository.getStock(symbol);
+            IsStock newIsStock = new IsStock();
+
+            newIsStock.setStockSymbol(symbol);
+            newIsStock.setStock(stock != null);
+
+            isStock = isStockRepository.save(newIsStock);
+        }
+
+        return ResponseEntity.ok(isStock);
     }
 }

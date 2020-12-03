@@ -2,6 +2,7 @@ package lt.liutikas.stockdebate.service;
 
 import lt.liutikas.stockdebate.model.Stock;
 import lt.liutikas.stockdebate.repository.InformationRepository;
+import lt.liutikas.stockdebate.repository.IsStockRepository;
 import lt.liutikas.stockdebate.repository.StockRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class StockServiceTest {
     private RestTemplate restTemplate;
     private StockRepository stockRepository;
     private InformationRepository informationRepository;
+    private IsStockRepository isStockRepository;
 
 
     @Before
@@ -26,7 +28,8 @@ public class StockServiceTest {
         restTemplate = mock(RestTemplate.class);
         stockRepository = mock(StockRepository.class);
         informationRepository = mock(InformationRepository.class);
-        stockService = new StockService(stockRepository, informationRepository);
+        isStockRepository = mock(IsStockRepository.class);
+        stockService = new StockService(stockRepository, isStockRepository, informationRepository);
     }
 
     @Test

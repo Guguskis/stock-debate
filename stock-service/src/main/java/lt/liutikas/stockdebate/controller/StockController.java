@@ -28,4 +28,9 @@ public class StockController {
     public ResponseEntity getStockPrice(@PathVariable String symbol, @PathVariable String date) {
         return stockService.getStockPrice(symbol, date);
     }
+
+    @GetMapping("/{symbol}/exists")
+    public ResponseEntity isStockExists(@PathVariable String symbol) {
+        return stockService.isStockExists(symbol);
+    }
 }
