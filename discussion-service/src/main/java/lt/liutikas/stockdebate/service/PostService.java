@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,14 +57,25 @@ public class PostService {
         return ResponseEntity.ok(posts);
     }
 
-    public ResponseEntity getCommentsForPost(String postUrl) {
+    public ResponseEntity getCommentsForPost(String subreddit, String postId) {
+        String commentsHtmlBody = redditRepository.getCommentsHtmlPageForPost(subreddit, postId);
+
+        Document document = Jsoup.parse(commentsHtmlBody);
+        Elements commentElements = document.getElementsByClass("md"); // todo parse this differently to contain creation date and maybe score
+
+        List<Comment> comments = commentElements.stream()
+                .map(this::convertToComment)
+                .collect(Collectors.toList());
+
         Post post = new Post();
-        List comments = new ArrayList<Comment>();
-
-        // todo
-
         post.setComments(comments);
         return ResponseEntity.ok(comments);
+    }
+
+    private Comment convertToComment(Element element) {
+        Comment comment = new Comment();
+        comment.setText(element.text());
+        return comment;
     }
 
     private Post convertElementToPost(Element postElement) {
@@ -81,6 +91,7 @@ public class PostService {
         post.setCommentCount(postParser.parseCommentCount(commentCountText));
         post.setCreationDate(postParser.parseCreationDate(creationDateText));
         post.setLink(link);
+
         return post;
     }
 }

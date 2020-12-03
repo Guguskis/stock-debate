@@ -12,6 +12,7 @@ public class RedditRepository {
 
 
     private static final String REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL = "https://old.reddit.com/r/%s/top/?sort=top&t=hour&limit=100";
+    private static final String GET_POST_COMMENTS_URL = "https://old.reddit.com/r/%s/comments/%s/";
 
     private final RestTemplate restTemplate;
 
@@ -21,10 +22,20 @@ public class RedditRepository {
 
     public String getSubredditPostsHtmlPage(String subreddit) {
         String url = String.format(REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL, subreddit);
+
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, getHttpEntityWithHeaders(), String.class);
+        return response.getBody();
+    }
+
+    private HttpEntity<Object> getHttpEntityWithHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.USER_AGENT, "retardedStockBot 0.1"); // Reddit restricts API access for default agents
-        HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
+        return new HttpEntity<>(httpHeaders);
+    }
+
+    public String getCommentsHtmlPageForPost(String subreddit, String postId) {
+        String url = String.format(GET_POST_COMMENTS_URL, subreddit, postId);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, getHttpEntityWithHeaders(), String.class);
         return response.getBody();
     }
 }

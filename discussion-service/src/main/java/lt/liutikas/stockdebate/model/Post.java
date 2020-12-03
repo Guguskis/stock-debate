@@ -1,6 +1,7 @@
 package lt.liutikas.stockdebate.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Post {
 
@@ -9,6 +10,7 @@ public class Post {
     private String title;
     private String link;
     private Integer commentCount;
+    private List<Comment> comments;
 
     public Integer getScore() {
         return score;
@@ -48,5 +50,13 @@ public class Post {
 
     public void setCommentCount(Integer commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

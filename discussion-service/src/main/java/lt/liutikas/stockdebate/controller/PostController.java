@@ -24,8 +24,8 @@ public class PostController {
         return postService.getPosts(subreddit);
     }
 
-    @GetMapping("/post/{postUrl}/comments")
-    public ResponseEntity getComments(@PathVariable String postUrl) {
-        return postService.getCommentsForPost(postUrl);
+    @GetMapping("/subreddit/{subreddit}/post/{postId}/comments")
+    public ResponseEntity getComments(@PathVariable String subreddit, @PathVariable String postId) {
+        return postService.getCommentsForPost(subreddit, postId);
     }
 }
