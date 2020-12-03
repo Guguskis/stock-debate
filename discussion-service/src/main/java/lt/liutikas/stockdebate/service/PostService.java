@@ -3,6 +3,7 @@ package lt.liutikas.stockdebate.service;
 import lt.liutikas.stockdebate.helper.PostParser;
 import lt.liutikas.stockdebate.model.Comment;
 import lt.liutikas.stockdebate.model.Post;
+import lt.liutikas.stockdebate.model.SubredditPosts;
 import lt.liutikas.stockdebate.repository.RedditRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -54,7 +55,9 @@ public class PostService {
 
         LOG.info(String.format("Retrieved '%s' posts for subreddit '%s'", posts.size(), subreddit));
 
-        return ResponseEntity.ok(posts);
+        SubredditPosts subredditPosts = new SubredditPosts();
+        subredditPosts.setPosts(posts);
+        return ResponseEntity.ok(subredditPosts);
     }
 
     public ResponseEntity getCommentsForPost(String subreddit, String postId) {
