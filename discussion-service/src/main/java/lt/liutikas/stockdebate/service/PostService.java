@@ -3,6 +3,7 @@ package lt.liutikas.stockdebate.service;
 import lt.liutikas.stockdebate.helper.PostParser;
 import lt.liutikas.stockdebate.model.Comment;
 import lt.liutikas.stockdebate.model.Post;
+import lt.liutikas.stockdebate.model.PostComments;
 import lt.liutikas.stockdebate.model.SubredditPosts;
 import lt.liutikas.stockdebate.repository.RedditRepository;
 import org.jsoup.Jsoup;
@@ -70,9 +71,9 @@ public class PostService {
                 .map(this::convertToComment)
                 .collect(Collectors.toList());
 
-        Post post = new Post();
-        post.setComments(comments);
-        return ResponseEntity.ok(comments);
+        PostComments postComments = new PostComments();
+        postComments.setComments(comments);
+        return ResponseEntity.ok(postComments);
     }
 
     private Comment convertToComment(Element element) {
