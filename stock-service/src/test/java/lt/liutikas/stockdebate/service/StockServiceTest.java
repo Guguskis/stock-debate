@@ -1,6 +1,7 @@
 package lt.liutikas.stockdebate.service;
 
 import lt.liutikas.stockdebate.model.Stock;
+import lt.liutikas.stockdebate.repository.InformationRepository;
 import lt.liutikas.stockdebate.repository.StockRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,22 +18,23 @@ public class StockServiceTest {
     private StockService stockService;
     private RestTemplate restTemplate;
     private StockRepository stockRepository;
+    private InformationRepository informationRepository;
 
 
     @Before
     public void setUp() {
         restTemplate = mock(RestTemplate.class);
         stockRepository = mock(StockRepository.class);
-        stockService = new StockService(restTemplate, stockRepository);
+        informationRepository = mock(InformationRepository.class);
+        stockService = new StockService(stockRepository, informationRepository);
     }
 
     @Test
     public void getStock_ExistingSymbolProvidedAndNotStoredInDatabase_ReturnsStock() {
         Stock teslaStock = getTeslaStock();
 
-        when(restTemplate.getForObject(anyString(), eq(Stock.class)))
+        when(informationRepository.getStock("TSLA"))
                 .thenReturn(teslaStock);
-
 
         ResponseEntity response = stockService.getStock("TSLA");
         Stock stock = (Stock) response.getBody();
@@ -60,7 +62,8 @@ public class StockServiceTest {
         Stock teslaStockInDatabase = getTeslaStock();
         teslaStockInDatabase.setLogoUrl("https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fautoconsignmentofsandiego.com%2Fimages%2FTesla_Logo.png");
 
-        when(restTemplate.getForObject(anyString(), eq(Stock.class)))
+
+        when(informationRepository.getStock("TSLA"))
                 .thenReturn(teslaStock);
 
         when(stockRepository.findBySymbolIgnoreCase("TSLA"))
