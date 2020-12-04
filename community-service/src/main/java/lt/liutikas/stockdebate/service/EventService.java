@@ -41,7 +41,7 @@ public class EventService {
         this.opinionParser = opinionParser;
     }
 
-    @Scheduled(fixedRate = 1000 * 60)
+    @Scheduled(fixedRate = 1000 * 60 * 30)
     public void runScrapePosts() {
         List<Subreddit> subreddits = subredditRepository.findAllByCollectOpinionsTrue();
 
