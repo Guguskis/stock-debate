@@ -19,10 +19,15 @@ public class CommentRepository {
 
     public String getRedditUserCommentsHtmlPage(String username) {
         String url = String.format(REDDIT_USER_PROFILE_URL, username);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, getHttpEntityWithHeaders(), String.class);
+
+        return response.getBody();
+    }
+
+    private HttpEntity<Object> getHttpEntityWithHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.USER_AGENT, "retardedStockBot 0.1"); // Reddit restricts API access for default agents
         HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
-        return response.getBody();
+        return httpEntity;
     }
 }
