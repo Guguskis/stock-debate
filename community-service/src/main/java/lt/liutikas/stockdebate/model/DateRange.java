@@ -9,7 +9,7 @@ public enum DateRange {
     MONTH(1, ChronoUnit.MONTHS),
     THREE_MONTHS(3, ChronoUnit.MONTHS),
     SIX_MONTHS(6, ChronoUnit.MONTHS),
-    YEAR(1, ChronoUnit.MONTHS);
+    YEAR(1, ChronoUnit.YEARS);
 
     private long amount;
     private ChronoUnit unit;

@@ -66,9 +66,9 @@ public class OpinionService {
         long timeStepInSeconds = dateRange.getTimeStepInSeconds(steps);
         LocalDateTime startDate = dateRange.getStartDate(LocalDateTime.now(clock));
 
-        for (int i = 1; i < steps; i++) {
+        for (int i = 1; i <= steps; i++) {
             LocalDateTime fromDate = startDate.plusSeconds((i - 1) * timeStepInSeconds);
-            LocalDateTime toDate = startDate.plusSeconds((i) * timeStepInSeconds);
+            LocalDateTime toDate = i == steps ? LocalDateTime.now(clock) : startDate.plusSeconds((i) * timeStepInSeconds);
 
             opinionsDetails.add(getOpinionDetail(opinions, fromDate, toDate));
         }
