@@ -65,8 +65,8 @@ public class PostService {
     }
 
     public ResponseEntity getCommentsForPost(String subreddit, String postId) {
-        String commentsHtmlBody = redditRepository.getGetPostHtmlPage(subreddit, postId);
-        List<Comment> comments = commentsParser.parseComments(commentsHtmlBody);
+        String hotPostHtmlPage = redditRepository.getGetPostHtmlPage(subreddit, postId);
+        List<Comment> comments = commentsParser.parseComments(hotPostHtmlPage);
 
         PostComments postComments = new PostComments();
         postComments.setComments(comments);

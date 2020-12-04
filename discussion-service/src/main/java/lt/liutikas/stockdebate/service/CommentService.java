@@ -27,9 +27,9 @@ public class CommentService {
     }
 
     public ResponseEntity getComments(String username) {
-        String pageHtmlBody;
+        String userHtmlPage;
         try {
-            pageHtmlBody = commentRepository.getRedditUserCommentsHtmlPage(username);
+            userHtmlPage = commentRepository.getRedditUserCommentsHtmlPage(username);
         } catch (RestClientException e) {
             LOG.error(String.format("Failed to retrieve comments for user '%s'", username), e);
 
@@ -40,7 +40,7 @@ public class CommentService {
             return ResponseEntity.badRequest().body("User not found or banned");
         }
 
-        List<Comment> comments = commentsParser.parseComments(pageHtmlBody);
+        List<Comment> comments = commentsParser.parseComments(userHtmlPage);
 
         LOG.info(String.format("Retrieved %d comments for user '%s'", comments.size(), username));
 
