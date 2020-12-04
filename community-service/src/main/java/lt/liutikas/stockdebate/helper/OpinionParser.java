@@ -6,8 +6,6 @@ import lt.liutikas.stockdebate.model.opinion.OpinionType;
 import lt.liutikas.stockdebate.repository.StockRepository;
 import org.springframework.stereotype.Component;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,11 +23,9 @@ public class OpinionParser {
     private final List<String> negativeWords = Arrays.asList("bad", "plummet", "tank", "shit", "lost", "short", "worry", "pump and dump", "FOMO", "lose", "underperform");
 
     private final StockRepository stockRepository;
-    private final Clock clock;
 
-    public OpinionParser(StockRepository stockRepository, Clock clock) {
+    public OpinionParser(StockRepository stockRepository) {
         this.stockRepository = stockRepository;
-        this.clock = clock;
     }
 
     public List<Opinion> parseComment(Comment comment) {
@@ -51,7 +47,7 @@ public class OpinionParser {
 
         opinion.setOpinionType(getOpinionType(positiveWordsCount, negativeWordsCount));
         opinion.setStockSymbol(stockSymbol);
-        opinion.setCreated(LocalDateTime.now(clock));
+        opinion.setCreated(comment.getCreationDate());
 
         return Arrays.asList(opinion);
     }

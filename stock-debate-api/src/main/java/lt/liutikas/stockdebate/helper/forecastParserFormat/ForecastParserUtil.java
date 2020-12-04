@@ -5,6 +5,7 @@ import lt.liutikas.stockdebate.model.ParsedForecast;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ForecastParserUtil {
 
@@ -20,7 +21,7 @@ public class ForecastParserUtil {
         return forecastType;
     }
 
-    public static String getExpirationDate(Clock clock, LocalDate createdDate, String expirationDateString) {
+    public static String getExpirationDate(Clock clock, LocalDateTime createdDate, String expirationDateString) {
         String[] expirationDateStrings = expirationDateString.split("/");
         String date;
 
@@ -40,23 +41,26 @@ public class ForecastParserUtil {
         String day = appendMissingTrailingZero(expirationDateStrings[1]);
         String year = expirationDateStrings[2];
 
-        return String.format("20%s-%s-%s", year, month, day);
+        return String.format("20%s-%s-%sT00:00:00", year, month, day);
     }
 
-    private static String getShortDate(Clock clock, LocalDate createdDate, String[] expirationDateStrings) {
-        String month = appendMissingTrailingZero(expirationDateStrings[0]);
-        String day = appendMissingTrailingZero(expirationDateStrings[1]);
-
+    private static String getShortDate(Clock clock, LocalDateTime createdDate, String[] expirationDateStrings) {
         LocalDate now = LocalDate.now(clock);
-        LocalDate expirationDate = LocalDate.of(now.getYear(), Integer.parseInt(month), Integer.parseInt(day));
 
-        int year;
-        if (expirationDate.isBefore(createdDate)) {
+        String monthString = appendMissingTrailingZero(expirationDateStrings[0]);
+        String dayString = appendMissingTrailingZero(expirationDateStrings[1]);
+        int month = Integer.parseInt(monthString);
+        int day = Integer.parseInt(dayString);
+        int year = now.getYear();
+
+        LocalDateTime expirationDateTime = LocalDateTime.of(year, month, day, 0, 0);
+
+        if (expirationDateTime.isBefore(createdDate)) {
             year = now.getYear() + 1;
         } else {
             year = now.getYear();
         }
-        return String.format("%s-%s-%s", year, month, day);
+        return String.format("%s-%s-%sT00:00:00", year, monthString, dayString);
     }
 
     private static String appendMissingTrailingZero(String doubleDigitString) {
@@ -64,7 +68,7 @@ public class ForecastParserUtil {
         return doubleDigitString;
     }
 
-    public static ParsedForecast getParsedForecast(String symbol, String strikePriceString, String forecastTypeString, String expirationDateString, Clock clock, LocalDate createdDate) {
+    public static ParsedForecast getParsedForecast(String symbol, String strikePriceString, String forecastTypeString, String expirationDateString, Clock clock, LocalDateTime createdDate) {
         ParsedForecast parsedForecast = new ParsedForecast();
         parsedForecast.setStockSymbol(symbol.toUpperCase());
         parsedForecast.setStrikePrice(Double.parseDouble(strikePriceString));

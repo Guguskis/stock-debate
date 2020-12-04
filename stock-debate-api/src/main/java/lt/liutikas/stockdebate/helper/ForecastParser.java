@@ -8,7 +8,7 @@ import lt.liutikas.stockdebate.model.ParsedForecast;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ForecastParser {
         );
     }
 
-    public List<ParsedForecast> parse(String text, LocalDate createdDate) {
+    public List<ParsedForecast> parse(String text, LocalDateTime createdDate) {
         List<ParsedForecast> parsedForecasts = new ArrayList<>();
 
         for (int i = 0; i < forecastParserFormats.size(); i++) {

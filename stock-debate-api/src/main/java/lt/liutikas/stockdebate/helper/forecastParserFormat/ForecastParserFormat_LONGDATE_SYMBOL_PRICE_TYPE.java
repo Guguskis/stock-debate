@@ -3,7 +3,7 @@ package lt.liutikas.stockdebate.helper.forecastParserFormat;
 import lt.liutikas.stockdebate.model.ParsedForecast;
 
 import java.time.Clock;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +34,7 @@ public class ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE implements Forecast
     }
 
     @Override
-    public ParsedForecast parse(String text, LocalDate createdDate) {
+    public ParsedForecast parse(String text, LocalDateTime createdDate) {
         Matcher matcher = getMatcher(text);
         matcher.find();
         String expirationDateString = matcher.group(1);

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
@@ -28,80 +28,80 @@ public class ForecastParserTest {
     @Test
     public void parse_textGivenInFormat_SYMBOL_$PRICETYPE_DATE_returnsParsedForecast() {
         String text = "I have F $9c 10/30. This is either gonna be a big payday on the 29th after their earnings or the \uD83C\uDF08\uD83D\uDC3B are gonna have their way with my ass.";
-        LocalDate createdDate = LocalDate.of(2020, 8, 15);
+        LocalDateTime createdDate = LocalDateTime.of(2020, 8, 15, 0, 0);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);
 
         assertEquals(1, parsedForecasts.size());
         ParsedForecast parsedForecast = parsedForecasts.get(0);
-        assertParsedForecast(parsedForecast, "F", "2020-10-30", 9, ForecastType.CALL);
+        assertParsedForecast(parsedForecast, "F", "2020-10-30T00:00:00", 9, ForecastType.CALL);
     }
 
     @Test
     public void parse_textGivenInFormat_SYMBOL_PRICETYPE_DATE_returnsParsedForecast() {
         String text = "NIO 50p 11/20";
-        LocalDate createdDate = LocalDate.of(2020, 8, 15);
+        LocalDateTime createdDate = LocalDateTime.of(2020, 8, 15, 0, 0);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);
 
         assertEquals(1, parsedForecasts.size());
-        assertParsedForecast(parsedForecasts.get(0), "NIO", "2020-11-20", 50, ForecastType.PUT);
+        assertParsedForecast(parsedForecasts.get(0), "NIO", "2020-11-20T00:00:00", 50, ForecastType.PUT);
     }
 
     @Test
     public void parse_textGivenInFormat_symbol_PRICETYPE_DATE_returnsParsedForecast() {
         String text = "Yep. I'm holding msft 230c 12/18";
-        LocalDate createdDate = LocalDate.of(2020, 8, 15);
+        LocalDateTime createdDate = LocalDateTime.of(2020, 8, 15, 0, 0);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);
 
         assertEquals(1, parsedForecasts.size());
-        assertParsedForecast(parsedForecasts.get(0), "MSFT", "2020-12-18", 230, ForecastType.CALL);
+        assertParsedForecast(parsedForecasts.get(0), "MSFT", "2020-12-18T00:00:00", 230, ForecastType.CALL);
     }
 
     @Test
     public void parse_textGivenInFormat_SYMBOL_PRICETYPE_DATE_returnsMultipleParsedForecast() {
         String text = "NVDA 605C 11/13 & NVDA 625C 11/20";
-        LocalDate createdDate = LocalDate.of(2020, 8, 15);
+        LocalDateTime createdDate = LocalDateTime.of(2020, 8, 15, 0, 0);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);
 
         assertEquals(2, parsedForecasts.size());
-        assertParsedForecast(parsedForecasts.get(0), "NVDA", "2020-11-13", 605, ForecastType.CALL);
-        assertParsedForecast(parsedForecasts.get(1), "NVDA", "2020-11-20", 625, ForecastType.CALL);
+        assertParsedForecast(parsedForecasts.get(0), "NVDA", "2020-11-13T00:00:00", 605, ForecastType.CALL);
+        assertParsedForecast(parsedForecasts.get(1), "NVDA", "2020-11-20T00:00:00", 625, ForecastType.CALL);
     }
 
     @Test
     public void parse_textGivenInFormat_$SYMBOL_PRICETYPE_DATE_returnsMultipleParsedForecast() {
         String text = "$MCK 195c 9/15"; // was 1/15 candidate
-        LocalDate createdDate = LocalDate.of(2020, 8, 15);
+        LocalDateTime createdDate = LocalDateTime.of(2020, 8, 15, 0, 0);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);
 
         assertEquals(1, parsedForecasts.size());
-        assertParsedForecast(parsedForecasts.get(0), "MCK", "2020-09-15", 195, ForecastType.CALL);
+        assertParsedForecast(parsedForecasts.get(0), "MCK", "2020-09-15T00:00:00", 195, ForecastType.CALL);
     }
 
     @Test
     public void parse_textGivenInFormat_SYMBOL_DATE_$PRICETYPE_returnsParsedForecast() {
         String text = "Should of loaded up on boomer calls.. T 12/19 $30c take me to the moon with you old timers!";
-        LocalDate createdDate = LocalDate.of(2020, 8, 15);
+        LocalDateTime createdDate = LocalDateTime.of(2020, 8, 15, 0, 0);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);
 
         assertEquals(1, parsedForecasts.size());
-        assertParsedForecast(parsedForecasts.get(0), "T", "2020-12-19", 30, ForecastType.CALL);
+        assertParsedForecast(parsedForecasts.get(0), "T", "2020-12-19T00:00:00", 30, ForecastType.CALL);
     }
 
     @Test
     public void parse_textGivenInFormat_LONGDATE_SYMBOL_PRICE_TYPE_returnsParsedForecast() {
         String text = "11/9/21 SPY 363 Call";
-        LocalDate createdDate = LocalDate.of(2020, 8, 15);
+        LocalDateTime createdDate = LocalDateTime.of(2020, 8, 15, 0, 0);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);
 
         assertEquals(1, parsedForecasts.size());
-        assertParsedForecast(parsedForecasts.get(0), "SPY", "2021-11-09", 363, ForecastType.CALL);
+        assertParsedForecast(parsedForecasts.get(0), "SPY", "2021-11-09T00:00:00", 363, ForecastType.CALL);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ForecastParserTest {
                 "Currently down 80% total\n" +
                 "Can Li hit $40 by 11/27\uD83C\uDD98\uD83D\uDC42\uD83C\uDFFB\n" +
                 "\n";
-        LocalDate createdDate = LocalDate.of(2020, 8, 15);
+        LocalDateTime createdDate = LocalDateTime.of(2020, 8, 15, 0, 0);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);
 
@@ -125,12 +125,12 @@ public class ForecastParserTest {
     @Test
     public void parse_forecastExpirationIsDayBeforeCreated_returnsParsedForecastOfNextYear() {
         String text = "$MCK 195c 12/14";
-        LocalDate createdDate = LocalDate.of(2020, 12, 15);
+        LocalDateTime createdDate = LocalDateTime.of(2020, 12, 15, 0, 0);
 
         List<ParsedForecast> parsedForecasts = forecastParser.parse(text, createdDate);
 
         assertEquals(1, parsedForecasts.size());
-        assertParsedForecast(parsedForecasts.get(0), "MCK", "2021-12-14", 195, ForecastType.CALL);
+        assertParsedForecast(parsedForecasts.get(0), "MCK", "2021-12-14T00:00:00", 195, ForecastType.CALL);
     }
 
     private void assertParsedForecast(ParsedForecast parsedForecast, String stockSymbol, String expirationDate, double strikePrice, ForecastType forecastType) {

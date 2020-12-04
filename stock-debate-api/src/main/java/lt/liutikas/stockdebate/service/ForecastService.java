@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
@@ -65,9 +65,9 @@ public class ForecastService {
     }
 
     private Forecast getForecast(ParsedForecast parsedForecast) {
-        LocalDate expirationDate = LocalDate.parse(parsedForecast.getExpirationDate());
-        LocalDate createdDate = parsedForecast.getCreatedDate();
-        if (expirationDate.isBefore(createdDate)) {
+        LocalDateTime expirationDateTime = LocalDateTime.parse(parsedForecast.getExpirationDate());
+        LocalDateTime createdDate = parsedForecast.getCreatedDate();
+        if (expirationDateTime.isBefore(createdDate)) {
             return null;
         }
 
@@ -112,8 +112,8 @@ public class ForecastService {
         }
     }
 
-    private String getCreatedDateString(LocalDate createdDate) {
-        return createdDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    private String getCreatedDateString(LocalDateTime createdDate) {
+        return createdDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 
     private List<ParsedForecast> getParsedForecasts(List<Comment> comments) {
@@ -155,7 +155,7 @@ public class ForecastService {
     }
 
     private boolean isExpired(String expirationDateString) {
-        LocalDate expirationDate = LocalDate.parse(expirationDateString);
-        return LocalDate.now().isAfter(expirationDate);
+        LocalDateTime expirationDate = LocalDateTime.parse(expirationDateString);
+        return LocalDateTime.now().isAfter(expirationDate);
     }
 }

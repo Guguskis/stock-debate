@@ -7,7 +7,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -32,14 +31,18 @@ public class CommentsParser {
     private Comment convertElementToComment(Element commentElement) {
         String commentText = commentElement.getElementsByClass("usertext-body").text();
         String scoreText = commentElement.getElementsByClass("score unvoted").text();
-        String createdDateString = commentElement.getElementsByAttribute("datetime").get(0).attr("datetime");
+        String creationDateString = commentElement.getElementsByAttribute("datetime").get(0).attr("datetime");
 
         Comment comment = new Comment();
-        LocalDateTime creationDateTime = LocalDateTime.parse(createdDateString, DateTimeFormatter.ISO_DATE_TIME);
-        comment.setCreationDate(LocalDate.from(creationDateTime));
+        comment.setCreationDate(parseCreationDate(creationDateString));
         comment.setText(commentText);
         comment.setScore(parseScore(scoreText));
+
         return comment;
+    }
+
+    private LocalDateTime parseCreationDate(String createdDateString) {
+        return LocalDateTime.parse(createdDateString, DateTimeFormatter.ISO_DATE_TIME);
     }
 
     public Integer parseScore(String text) {

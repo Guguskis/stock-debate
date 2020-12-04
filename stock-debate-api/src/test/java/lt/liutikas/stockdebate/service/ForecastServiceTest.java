@@ -12,7 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
@@ -44,16 +44,16 @@ public class ForecastServiceTest {
         Double latestPrice = 25.;
         String companyName = "Palantir inc.";
         String logoUrl = "logo url";
-        LocalDate createdDate = LocalDate.of(2020, 11, 4);
-        String createdDateString = "2020-11-04";
-        String expirationDateString = "2020-12-04";
+        LocalDateTime createdDateTime = LocalDateTime.of(2020, 11, 4, 0, 0);
+        String createdDateString = "2020-11-04T00:00:00";
+        String expirationDateString = "2020-12-04T00:00:00";
         ForecastType forecastType = ForecastType.CALL;
         Double strikePrice = 24.;
         Double successCoefficient = 0.04;
 
         Comment comment = new Comment();
         comment.setText("YOLO PLTR 24c 12/4");
-        comment.setCreationDate(createdDate);
+        comment.setCreationDate(createdDateTime);
 
         Stock stock = new Stock();
         stock.setSymbol(stockSymbol);
@@ -61,10 +61,15 @@ public class ForecastServiceTest {
         stock.setCompanyName(companyName);
         stock.setLogoUrl(logoUrl);
 
+        SimpleStockDetail simpleStockDetail = new SimpleStockDetail();
+        simpleStockDetail.setPrice(latestPrice);
+
         when(discussionRepository.getComments("John"))
                 .thenReturn(Collections.singletonList(comment));
         when(stockRepository.getStock(stockSymbol))
                 .thenReturn(stock);
+        when(stockRepository.getSimpleStockDetail(stockSymbol, expirationDateString))
+                .thenReturn(simpleStockDetail);
 
         ResponseEntity responseEntity = forecastService.getForecasts("John");
         RedditUser redditUser = (RedditUser) responseEntity.getBody();
@@ -83,9 +88,9 @@ public class ForecastServiceTest {
         Double latestPrice = 25.;
         String companyName = "Palantir inc.";
         String logoUrl = "logo url";
-        LocalDate createdDate = LocalDate.of(2020, 11, 4);
-        String createdDateString = "2020-11-04";
-        String expirationDateString = "2020-11-16";
+        LocalDateTime createdDateTime = LocalDateTime.of(2020, 11, 4, 0, 0);
+        String createdDateString = "2020-11-04T00:00:00";
+        String expirationDateString = "2020-11-16T00:00:00";
         ForecastType forecastType = ForecastType.CALL;
         Double strikePrice = 24.;
         Double expirationPrice = 28.;
@@ -93,7 +98,7 @@ public class ForecastServiceTest {
 
         Comment comment = new Comment();
         comment.setText("YOLO PLTR 24c 11/16");
-        comment.setCreationDate(createdDate);
+        comment.setCreationDate(createdDateTime);
 
         Stock stock = new Stock();
         stock.setSymbol(stockSymbol);
@@ -127,11 +132,11 @@ public class ForecastServiceTest {
     @Test
     public void getForecasts_userCommentedNotExistingStock_ReturnsNoForecasts() {
         String stockSymbol = "meme";
-        LocalDate createdDate = LocalDate.of(2020, 11, 4);
+        LocalDateTime createdDateTime = LocalDateTime.of(2020, 11, 4, 0, 0);
 
         Comment comment = new Comment();
         comment.setText("YOLO meme 24c 11/16");
-        comment.setCreationDate(createdDate);
+        comment.setCreationDate(createdDateTime);
 
         when(discussionRepository.getComments("John"))
                 .thenReturn(Collections.singletonList(comment));
@@ -154,7 +159,8 @@ public class ForecastServiceTest {
 
         Comment comment = new Comment();
         comment.setText("Put 2k in PLTR FD calls 12/4");
-        comment.setCreationDate(LocalDate.of(2020, 11, 4));
+        LocalDateTime createdDateTime = LocalDateTime.of(2020, 11, 4, 0, 0);
+        comment.setCreationDate(createdDateTime);
 
         Stock stock = new Stock();
         stock.setSymbol(stockSymbol);

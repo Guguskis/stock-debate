@@ -7,7 +7,6 @@ import lt.liutikas.stockdebate.repository.StockRepository;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.Clock;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +21,7 @@ public class OpinionParserTest {
     @Before
     public void setUp() {
         stockRepository = mock(StockRepository.class);
-        opinionParser = new OpinionParser(stockRepository, Clock.systemUTC()); // todo change to fixed clock
+        opinionParser = new OpinionParser(stockRepository);
     }
 
     @Test

@@ -1,18 +1,18 @@
 package lt.liutikas.stockdebate.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Comment {
 
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
     private String text;
-    private int score;
+    private Integer score;
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -24,11 +24,11 @@ public class Comment {
         this.text = text;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 }
