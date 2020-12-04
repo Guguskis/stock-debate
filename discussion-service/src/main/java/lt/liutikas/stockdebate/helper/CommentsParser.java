@@ -1,0 +1,63 @@
+package lt.liutikas.stockdebate.helper;
+
+import lt.liutikas.stockdebate.model.Comment;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+@Component
+public class CommentsParser {
+
+    public List<Comment> parseComments(String pageHtmlBody) {
+        Document document = Jsoup.parse(pageHtmlBody);
+        Elements commentElements = document.getElementsByClass("comment");
+
+        List<Comment> comments = commentElements.stream()
+                .map(this::convertElementToComment)
+                .collect(Collectors.toList());
+
+        return comments;
+    }
+
+    private Comment convertElementToComment(Element commentElement) {
+        String commentText = commentElement.getElementsByClass("usertext-body").text();
+        String scoreText = commentElement.getElementsByClass("score unvoted").text();
+        String createdDateString = commentElement.getElementsByAttribute("datetime").get(0).attr("datetime");
+
+        Comment comment = new Comment();
+        LocalDateTime creationDateTime = LocalDateTime.parse(createdDateString, DateTimeFormatter.ISO_DATE_TIME);
+        comment.setCreationDate(LocalDate.from(creationDateTime));
+        comment.setText(commentText);
+        comment.setScore(parseScore(scoreText));
+        return comment;
+    }
+
+    public Integer parseScore(String text) {
+        Pattern pattern = Pattern.compile("(-?\\d+) point");
+        Matcher matcher = pattern.matcher(text);
+
+        if (!matcher.find()) {
+            return null;
+        }
+
+        String scoreString = matcher.group(1);
+        int score;
+        try {
+            score = Integer.parseInt(scoreString);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+
+        return score;
+    }
+}

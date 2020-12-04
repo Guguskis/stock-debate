@@ -1,7 +1,9 @@
 package lt.liutikas.stockdebate.service;
 
+import lt.liutikas.stockdebate.helper.CommentsParser;
 import lt.liutikas.stockdebate.helper.PostParser;
 import lt.liutikas.stockdebate.model.Post;
+import lt.liutikas.stockdebate.model.SubredditPosts;
 import lt.liutikas.stockdebate.repository.RedditRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +33,7 @@ public class PostServiceTest {
     @Before
     public void setUp() {
         redditRepository = mock(RedditRepository.class);
-        postService = new PostService(redditRepository, new PostParser());
+        postService = new PostService(redditRepository, new PostParser(), new CommentsParser());
     }
 
     @Test
@@ -45,7 +47,8 @@ public class PostServiceTest {
                 .thenReturn(wallstreetbetsPostsHtmlPage);
 
         ResponseEntity response = postService.getPosts(subreddit);
-        List<Post> posts = (List) response.getBody();
+        SubredditPosts subredditPosts = (SubredditPosts) response.getBody();
+        List<Post> posts = subredditPosts.getPosts();
 
         assertEquals(25, posts.size());
         assertPost(posts.get(0),

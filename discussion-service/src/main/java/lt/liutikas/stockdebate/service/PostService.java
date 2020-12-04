@@ -1,5 +1,6 @@
 package lt.liutikas.stockdebate.service;
 
+import lt.liutikas.stockdebate.helper.CommentsParser;
 import lt.liutikas.stockdebate.helper.PostParser;
 import lt.liutikas.stockdebate.model.Comment;
 import lt.liutikas.stockdebate.model.Post;
@@ -27,10 +28,12 @@ public class PostService {
 
     private final RedditRepository redditRepository;
     private final PostParser postParser;
+    private final CommentsParser commentsParser;
 
-    public PostService(RedditRepository redditRepository, PostParser postParser) {
+    public PostService(RedditRepository redditRepository, PostParser postParser, CommentsParser commentsParser) {
         this.redditRepository = redditRepository;
         this.postParser = postParser;
+        this.commentsParser = commentsParser;
     }
 
     public ResponseEntity getPosts(String subreddit) {
@@ -62,24 +65,13 @@ public class PostService {
     }
 
     public ResponseEntity getCommentsForPost(String subreddit, String postId) {
-        String commentsHtmlBody = redditRepository.getCommentsHtmlPageForPost(subreddit, postId);
-
-        Document document = Jsoup.parse(commentsHtmlBody);
-        Elements commentElements = document.getElementsByClass("md"); // todo parse this differently to contain creation date and maybe score
-
-        List<Comment> comments = commentElements.stream()
-                .map(this::convertToComment)
-                .collect(Collectors.toList());
+        String commentsHtmlBody = redditRepository.getGetPostHtmlPage(subreddit, postId);
+        List<Comment> comments = commentsParser.parseComments(commentsHtmlBody);
 
         PostComments postComments = new PostComments();
         postComments.setComments(comments);
-        return ResponseEntity.ok(postComments);
-    }
 
-    private Comment convertToComment(Element element) {
-        Comment comment = new Comment();
-        comment.setText(element.text());
-        return comment;
+        return ResponseEntity.ok(postComments);
     }
 
     private Post convertElementToPost(Element postElement) {

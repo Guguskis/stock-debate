@@ -1,17 +1,14 @@
 package lt.liutikas.stockdebate.service;
 
-import lt.liutikas.stockdebate.helper.CommentParser;
+import lt.liutikas.stockdebate.helper.CommentsParser;
 import lt.liutikas.stockdebate.model.Comment;
 import lt.liutikas.stockdebate.model.RedditUser;
 import lt.liutikas.stockdebate.repository.CommentRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,25 +30,24 @@ public class CommentServiceTest {
     private static final String NOW = "2020-11-17T18:35:24.00Z";
 
     private CommentService commentService;
-    private RestTemplate restTemplate;
     private CommentRepository commentRepository;
 
     @Before
     public void setUp() {
-        restTemplate = mock(RestTemplate.class);
         commentRepository = mock(CommentRepository.class);
-        commentService = new CommentService(restTemplate, commentRepository, new CommentParser());
+        commentService = new CommentService(new CommentsParser(), commentRepository);
     }
 
     @Test
     public void getComments_providedExistingUsername_returnsAllComments() {
         Path path = Paths.get("src", "test", "resources", "comments", "retardStockBot.html");
         String retardStockBotProfileHtmlPage = getFileBody(path);
+        String username = "RetardStockBot";
 
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(new ResponseEntity<>(retardStockBotProfileHtmlPage, HttpStatus.OK));
+        when(commentRepository.getRedditUserCommentsHtmlPage(username))
+                .thenReturn(retardStockBotProfileHtmlPage);
 
-        ResponseEntity response = commentService.getComments("RetardStockBot");
+        ResponseEntity response = commentService.getComments(username);
         RedditUser redditUser = (RedditUser) response.getBody();
         List<Comment> comments = redditUser.getComments();
 
@@ -63,7 +59,7 @@ public class CommentServiceTest {
 
     @Test
     public void getComments_providedNotExistingUsername_returnsBadRequest() {
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+        when(commentRepository.getRedditUserCommentsHtmlPage(anyString()))
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         ResponseEntity response = commentService.getComments("RetardStockBot");

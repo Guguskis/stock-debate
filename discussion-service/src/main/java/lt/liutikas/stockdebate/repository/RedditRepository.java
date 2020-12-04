@@ -12,7 +12,7 @@ public class RedditRepository {
 
 
     private static final String REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL = "https://old.reddit.com/r/%s/top/?sort=top&t=hour&limit=100";
-    private static final String GET_POST_COMMENTS_URL = "https://old.reddit.com/r/%s/comments/%s/";
+    private static final String GET_POST_PAGE_URL = "https://old.reddit.com/r/%s/comments/%s/";
 
     private final RestTemplate restTemplate;
 
@@ -33,8 +33,8 @@ public class RedditRepository {
         return new HttpEntity<>(httpHeaders);
     }
 
-    public String getCommentsHtmlPageForPost(String subreddit, String postId) {
-        String url = String.format(GET_POST_COMMENTS_URL, subreddit, postId);
+    public String getGetPostHtmlPage(String subreddit, String postId) {
+        String url = String.format(GET_POST_PAGE_URL, subreddit, postId);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, getHttpEntityWithHeaders(), String.class);
         return response.getBody();
     }

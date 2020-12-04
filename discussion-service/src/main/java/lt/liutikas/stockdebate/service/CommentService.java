@@ -1,47 +1,35 @@
 package lt.liutikas.stockdebate.service;
 
-import lt.liutikas.stockdebate.helper.CommentParser;
+import lt.liutikas.stockdebate.helper.CommentsParser;
 import lt.liutikas.stockdebate.model.Comment;
 import lt.liutikas.stockdebate.model.RedditUser;
 import lt.liutikas.stockdebate.repository.CommentRepository;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class CommentService {
 
-    private static final String REDDIT_USER_PROFILE_URL = "https://old.reddit.com/user/%s?limit=100";
     private final Logger LOG = LoggerFactory.getLogger(CommentService.class);
 
-    private final RestTemplate restTemplate;
+    private final CommentsParser commentsParser;
     private final CommentRepository commentRepository;
-    private final CommentParser commentParser;
 
-    public CommentService(RestTemplate restTemplate, CommentRepository commentRepository, CommentParser commentParser) {
-        this.restTemplate = restTemplate;
+    public CommentService(CommentsParser commentsParser, CommentRepository commentRepository) {
+        this.commentsParser = commentsParser;
         this.commentRepository = commentRepository;
-        this.commentParser = commentParser;
     }
 
     public ResponseEntity getComments(String username) {
         String pageHtmlBody;
         try {
-            pageHtmlBody = getRedditUserCommentsHtmlPage(username);
+            pageHtmlBody = commentRepository.getRedditUserCommentsHtmlPage(username);
         } catch (RestClientException e) {
             LOG.error(String.format("Failed to retrieve comments for user '%s'", username), e);
 
@@ -52,12 +40,7 @@ public class CommentService {
             return ResponseEntity.badRequest().body("User not found or banned");
         }
 
-        Document document = Jsoup.parse(pageHtmlBody);
-        Elements commentElements = document.getElementsByClass("comment");
-
-        List<Comment> comments = commentElements.stream()
-                .map(this::convertElementToComment)
-                .collect(Collectors.toList());
+        List<Comment> comments = commentsParser.parseComments(pageHtmlBody);
 
         LOG.info(String.format("Retrieved %d comments for user '%s'", comments.size(), username));
 
@@ -68,24 +51,4 @@ public class CommentService {
         return ResponseEntity.ok(redditUser);
     }
 
-    private String getRedditUserCommentsHtmlPage(String username) {
-        String url = String.format(REDDIT_USER_PROFILE_URL, username);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.USER_AGENT, "retardedStockBot 0.1"); // Reddit restricts API access for default agents
-        HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
-        return response.getBody();
-    }
-
-    private Comment convertElementToComment(Element commentElement) {
-        String commentText = commentElement.getElementsByClass("usertext-body").text();
-        String scoreText = commentElement.getElementsByClass("score unvoted").text();
-        String createdDateString = commentElement.getElementsByAttribute("datetime").get(0).attr("datetime");
-
-        Comment comment = new Comment();
-        comment.setCreationDate(commentParser.parseCreationDate(createdDateString));
-        comment.setText(commentText);
-        comment.setScore(commentParser.parseScore(scoreText));
-        return comment;
-    }
 }
