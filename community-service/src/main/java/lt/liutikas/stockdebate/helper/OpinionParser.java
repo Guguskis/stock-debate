@@ -21,8 +21,8 @@ public class OpinionParser {
 
     private static final String STOCK_SYMBOL_PATTERN = "[A-Z]{2,4}";
 
-    private final List<String> positiveWords = Arrays.asList("moon", "good", "buy", "great", "up", "long");
-    private final List<String> negativeWords = Arrays.asList("bad", "plummet", "tank", "shit", "lost", "short");
+    private final List<String> positiveWords = Arrays.asList("moon", "good", "buy", "great", "up", "long", "rally", "nothing to worry", "don't worry", "coming back", "cheap");
+    private final List<String> negativeWords = Arrays.asList("bad", "plummet", "tank", "shit", "lost", "short", "worry", "pump and dump", "FOMO", "lose", "underperform");
 
     private final StockRepository stockRepository;
     private final Clock clock;
@@ -72,7 +72,7 @@ public class OpinionParser {
         String wordsPattern = String.join("|", wordsToCount);
 
         int count = 0;
-        Pattern pattern = Pattern.compile(wordsPattern);
+        Pattern pattern = Pattern.compile(wordsPattern, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(text);
 
         while (matcher.find()) {
