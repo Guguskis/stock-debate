@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -32,29 +34,43 @@ public class EventService {
     private final DiscussionRepository discussionRepository;
     private final SubredditRepository subredditRepository;
     private final OpinionParser opinionParser;
+    private final Clock clock;
 
-    public EventService(EventRepository eventRepository, OpinionRepository opinionRepository, DiscussionRepository discussionRepository, SubredditRepository subredditRepository, OpinionParser opinionParser) {
+    public EventService(EventRepository eventRepository, OpinionRepository opinionRepository, DiscussionRepository discussionRepository, SubredditRepository subredditRepository, OpinionParser opinionParser, Clock clock) {
         this.eventRepository = eventRepository;
         this.opinionRepository = opinionRepository;
         this.discussionRepository = discussionRepository;
         this.subredditRepository = subredditRepository;
         this.opinionParser = opinionParser;
+        this.clock = clock;
     }
 
-    @Scheduled(fixedRate = 1000 * 60 * 30)
+    @Scheduled(fixedRate = 1000 * 60 * 5)
     public void runScrapePosts() {
         List<Subreddit> subreddits = subredditRepository.findAllByCollectOpinionsTrue();
 
         List<Event> events = subreddits.stream()
-                .flatMap(subreddit -> {
-                    List<Post> posts = discussionRepository.getPosts(subreddit.getName());
-                    return posts.stream()
-                            .map(post -> getEventIfNewPost(subreddit, post))
-                            .filter(Objects::nonNull);
-                }).collect(Collectors.toList());
+                .map(this::getNewEvents)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
 
         LOG.info(String.format("Saved %d new events", events.size()));
         eventRepository.saveAll(events);
+    }
+
+    private List<Event> getNewEvents(Subreddit subreddit) {
+        List<Post> posts = discussionRepository.getPosts(subreddit.getName());
+        return posts.stream()
+                .filter(this::ageThresholdReached)
+                .map(post -> getEventIfNewPost(subreddit, post))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private boolean ageThresholdReached(Post post) {
+        LocalDateTime thresholdDateTime = LocalDateTime.now(clock).minusMinutes(50);
+        LocalDateTime creationDateTime = post.getCreationDate();
+        return creationDateTime.isBefore(thresholdDateTime);
     }
 
     @Scheduled(fixedRate = 1250)
