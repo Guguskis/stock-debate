@@ -16,16 +16,17 @@ public class ForecastParser {
     private final List<ForecastParserFormat> forecastParserFormats;
 
     public ForecastParser(Clock clock) {
-        String symbolPattern = "[A-Z]{1,4}";
+        String symbolPattern = "[A-Za-z]{1,4}";
         String forecastTypePattern = "call|put|CALL|PUT|[cCpP]";
         String strikePricePattern = "[\\d\\.]+";
-        String expirationDatePattern = "\\d{1,2}/\\d{1,2}";
+        String expirationDateShortPattern = "\\d{1,2}/\\d{1,2}";
         String expirationDateLongPattern = "\\d{1,2}/\\d{1,2}/\\d{1,2}";
+        String expirationDatePattern = expirationDateLongPattern + "|" + expirationDateShortPattern;
 
         this.forecastParserFormats = Arrays.asList(
                 new ForecastParserFormat_SYMBOL_PRICETYPE_DATE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDatePattern),
                 new ForecastParserFormat_SYMBOL_DATE_PRICETYPE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDatePattern),
-                new ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDateLongPattern),
+                new ForecastParserFormat_DATE_SYMBOL_PRICE_TYPE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDatePattern),
                 new ForecastParserFormat_PRICE_DATE_SYMBOL_TYPE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDatePattern)
         );
     }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE implements ForecastParserFormat {
+public class ForecastParserFormat_DATE_SYMBOL_PRICE_TYPE implements ForecastParserFormat {
 
     private final Clock clock;
     private final String symbolPattern;
@@ -15,7 +15,7 @@ public class ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE implements Forecast
     private final String strikePricePattern;
     private final String expirationDatePattern;
 
-    public ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE(Clock clock, String symbolPattern, String forecastTypePattern, String strikePricePattern, String expirationDatePattern) {
+    public ForecastParserFormat_DATE_SYMBOL_PRICE_TYPE(Clock clock, String symbolPattern, String forecastTypePattern, String strikePricePattern, String expirationDatePattern) {
         this.clock = clock;
         this.symbolPattern = symbolPattern;
         this.forecastTypePattern = forecastTypePattern;
