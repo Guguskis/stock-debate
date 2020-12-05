@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -29,13 +30,15 @@ public class ForecastService {
     private final ForecastParser forecastParser;
     private final StockRepository stockRepository;
     private final DiscussionRepository discussionRepository;
+    private final Clock clock;
 
     public ForecastService(ForecastParser forecastParser,
                            StockRepository stockRepository,
-                           DiscussionRepository discussionRepository) {
+                           DiscussionRepository discussionRepository, Clock clock) {
         this.forecastParser = forecastParser;
         this.stockRepository = stockRepository;
         this.discussionRepository = discussionRepository;
+        this.clock = clock;
     }
 
     public ResponseEntity getForecasts(String username) {
@@ -156,6 +159,6 @@ public class ForecastService {
 
     private boolean isExpired(String expirationDateString) {
         LocalDateTime expirationDate = LocalDateTime.parse(expirationDateString);
-        return LocalDateTime.now().isAfter(expirationDate);
+        return LocalDateTime.now(clock).isAfter(expirationDate);
     }
 }

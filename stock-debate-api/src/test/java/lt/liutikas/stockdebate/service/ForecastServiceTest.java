@@ -32,10 +32,11 @@ public class ForecastServiceTest {
 
     @Before
     public void setUp() {
-        ForecastParser forecastParser = new ForecastParser(Clock.fixed(Instant.parse(NOW), ZoneOffset.UTC));
+        Clock clock = Clock.fixed(Instant.parse(NOW), ZoneOffset.UTC);
+        ForecastParser forecastParser = new ForecastParser(clock);
         stockRepository = mock(StockRepository.class);
         discussionRepository = mock(DiscussionRepository.class);
-        forecastService = new ForecastService(forecastParser, stockRepository, discussionRepository);
+        forecastService = new ForecastService(forecastParser, stockRepository, discussionRepository, clock);
     }
 
     @Test
