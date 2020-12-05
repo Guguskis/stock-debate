@@ -27,6 +27,9 @@ import java.util.stream.Collectors;
 @Component
 public class EventService {
 
+    private static final int MINUTES_PER_POSTS_SCRAPE_RUN = 5;
+    private static final int POST_AGE_THRESHOLD_IN_MINUTES = 50;
+
     private static final Logger LOG = LoggerFactory.getLogger(EventService.class);
 
     private final EventRepository eventRepository;
@@ -45,7 +48,7 @@ public class EventService {
         this.clock = clock;
     }
 
-    @Scheduled(fixedRate = 1000 * 60 * 5)
+    @Scheduled(fixedRate = 1000 * 60 * MINUTES_PER_POSTS_SCRAPE_RUN)
     public void runScrapePosts() {
         List<Subreddit> subreddits = subredditRepository.findAllByCollectOpinionsTrue();
 
@@ -68,7 +71,7 @@ public class EventService {
     }
 
     private boolean ageThresholdReached(Post post) {
-        LocalDateTime thresholdDateTime = LocalDateTime.now(clock).minusMinutes(50);
+        LocalDateTime thresholdDateTime = LocalDateTime.now(clock).minusMinutes(POST_AGE_THRESHOLD_IN_MINUTES);
         LocalDateTime creationDateTime = post.getCreationDate();
         return creationDateTime.isBefore(thresholdDateTime);
     }
