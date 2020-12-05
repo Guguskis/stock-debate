@@ -1,9 +1,6 @@
 package lt.liutikas.stockdebate.helper;
 
-import lt.liutikas.stockdebate.helper.forecastParserFormat.ForecastParserFormat;
-import lt.liutikas.stockdebate.helper.forecastParserFormat.ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE;
-import lt.liutikas.stockdebate.helper.forecastParserFormat.ForecastParserFormat_SYMBOL_DATE_PRICETYPE;
-import lt.liutikas.stockdebate.helper.forecastParserFormat.ForecastParserFormat_SYMBOL_PRICETYPE_DATE;
+import lt.liutikas.stockdebate.helper.forecastParserFormat.*;
 import lt.liutikas.stockdebate.model.ParsedForecast;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +16,7 @@ public class ForecastParser {
     private final List<ForecastParserFormat> forecastParserFormats;
 
     public ForecastParser(Clock clock) {
-        String symbolPattern = "[A-Za-z]{1,4}";
+        String symbolPattern = "[A-Z]{1,4}";
         String forecastTypePattern = "call|put|CALL|PUT|[cCpP]";
         String strikePricePattern = "[\\d\\.]+";
         String expirationDatePattern = "\\d{1,2}/\\d{1,2}";
@@ -28,7 +25,8 @@ public class ForecastParser {
         this.forecastParserFormats = Arrays.asList(
                 new ForecastParserFormat_SYMBOL_PRICETYPE_DATE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDatePattern),
                 new ForecastParserFormat_SYMBOL_DATE_PRICETYPE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDatePattern),
-                new ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDateLongPattern)
+                new ForecastParserFormat_LONGDATE_SYMBOL_PRICE_TYPE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDateLongPattern),
+                new ForecastParserFormat_PRICE_DATE_SYMBOL_TYPE(clock, symbolPattern, forecastTypePattern, strikePricePattern, expirationDatePattern)
         );
     }
 

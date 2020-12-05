@@ -3,9 +3,9 @@ server:
 spring:
   datasource:
     # temporary data storage
-    url: jdbc:h2:mem:testdb
+#    url: jdbc:h2:mem:testdb
     # temporary data storage
-    #    url: jdbc:h2:file:/data/sample
+    url: jdbc:h2:file:C:/Dev/h2databases/stock
     driverClassName: org.h2.Driver
     username: admin
   h2:
