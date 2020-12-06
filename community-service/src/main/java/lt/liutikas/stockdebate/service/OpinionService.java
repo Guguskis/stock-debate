@@ -55,7 +55,7 @@ public class OpinionService {
         subredditOpinions.setDateRange(dateRange);
         subredditOpinions.setOpinionsDetails(opinionsDetails);
 
-        LOG.info(String.format("Retrieved opinions for subreddit r/%s and '%s'", subredditName, stockSymbol));
+        LOG.info(String.format("Retrieved '%s' opinions for subreddit r/%s of '%s'", dateRange.toString(), subredditName, stockSymbol));
 
         return ResponseEntity.ok(subredditOpinions);
     }
@@ -64,7 +64,7 @@ public class OpinionService {
         ArrayList<OpinionsDetail> opinionsDetails = new ArrayList<>();
 
         // assuming oldest opinions are in the beginning of list
-        int steps = 100;
+        int steps = 25;
         long timeStepInSeconds = dateRange.getTimeStepInSeconds(steps);
         LocalDateTime startDate = dateRange.getStartDate(LocalDateTime.now(clock));
 
