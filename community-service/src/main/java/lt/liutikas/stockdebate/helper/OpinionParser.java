@@ -19,8 +19,8 @@ public class OpinionParser {
 
     private static final String STOCK_SYMBOL_PATTERN = "[A-Z]{2,4}";
 
-    private final List<String> positiveWords = Arrays.asList("moon", "good", "buy", "great", "up", "long", "rally", "nothing to worry", "don't worry", "coming back", "cheap");
-    private final List<String> negativeWords = Arrays.asList("bad", "plummet", "tank", "shit", "lost", "short", "worry", "pump and dump", "FOMO", "lose", "underperform");
+    private final List<String> positiveWords = Arrays.asList("bull", "buy", "cheap", "coming back", "don't worry", "good", "great", "long", "moon", "nothing to worry", "rally", "up");
+    private final List<String> negativeWords = Arrays.asList("FOMO", "bad", "bear", "down", "lose", "lost", "panic", "plummet", "pump and dump", "sell", "shit", "short", "tank", "underperform", "worry");
 
     private final StockRepository stockRepository;
 
