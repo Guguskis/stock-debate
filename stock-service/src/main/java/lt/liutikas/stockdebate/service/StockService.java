@@ -33,7 +33,7 @@ public class StockService {
         Stock liveStock = informationRepository.getStock(symbol);
 
         if (liveStock == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body("Stock not found");
         }
 
         Stock databaseStock = stockRepository.findBySymbolIgnoreCase(symbol);
