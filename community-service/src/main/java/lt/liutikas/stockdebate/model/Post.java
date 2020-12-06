@@ -1,5 +1,6 @@
 package lt.liutikas.stockdebate.model;
 
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,6 +12,8 @@ public class Post {
     private String link;
     private Integer commentCount;
     private List<Comment> comments;
+    @ManyToOne(optional = false)
+    private Subreddit subreddit;
 
     public Integer getScore() {
         return score;
@@ -58,5 +61,13 @@ public class Post {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public void setSubreddit(Subreddit subreddit) {
+        this.subreddit = subreddit;
+    }
+
+    public Subreddit getSubreddit() {
+        return subreddit;
     }
 }

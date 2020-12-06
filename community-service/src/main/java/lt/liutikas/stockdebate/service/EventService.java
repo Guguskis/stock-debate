@@ -53,21 +53,34 @@ public class EventService {
         List<Subreddit> subreddits = subredditRepository.findAllByCollectOpinionsTrue();
 
         List<Event> events = subreddits.stream()
-                .map(this::getNewEvents)
+                .map(Subreddit::getName)
+                .map(discussionRepository::getPosts)
+                .map(posts -> posts.stream()
+                        .filter(this::ageThresholdReached)
+                        .map(post -> {
+                            String link = post.getLink();
+                            String postId = parsePostId(link);
+
+                            Subreddit subreddit = post.getSubreddit();
+                            Event existingEvent = eventRepository.findBySubredditNameAndPostId(subreddit.getName(), postId);
+
+                            if (existingEvent != null) {
+                                return null;
+                            }
+
+                            Event event = new Event();
+                            event.setAnalyzed(false);
+                            event.setSubredditName(subreddit.getName());
+                            event.setPostId(postId);
+                            return event;
+                        })
+                        .collect(Collectors.toList()))
                 .flatMap(Collection::stream)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         LOG.info(String.format("Saved %d new events", events.size()));
         eventRepository.saveAll(events);
-    }
-
-    private List<Event> getNewEvents(Subreddit subreddit) {
-        List<Post> posts = discussionRepository.getPosts(subreddit.getName());
-        return posts.stream()
-                .filter(this::ageThresholdReached)
-                .map(post -> getEventIfNewPost(subreddit, post))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
     }
 
     private boolean ageThresholdReached(Post post) {
@@ -99,29 +112,6 @@ public class EventService {
         event.setAnalyzed(true);
         eventRepository.save(event);
         opinionRepository.saveAll(opinions);
-    }
-
-    private Event getEventIfNewPost(Subreddit subreddit, Post post) {
-        String link = post.getLink();
-        String postId = parsePostId(link);
-
-        if (postId == null) {
-            LOG.warn(String.format("Unable to parse postId for link '%s'", link));
-            return null;
-        }
-
-        String subredditName = subreddit.getName();
-        Event existingEvent = eventRepository.findBySubredditNameAndPostId(subredditName, postId);
-
-        if (existingEvent == null) {
-            Event event = new Event();
-            event.setAnalyzed(false);
-            event.setSubredditName(subredditName);
-            event.setPostId(postId);
-            return event;
-        }
-
-        return null;
     }
 
     private String parsePostId(String link) {
