@@ -5,6 +5,7 @@ import lt.liutikas.stockdebate.model.Subreddit;
 import lt.liutikas.stockdebate.model.opinion.*;
 import lt.liutikas.stockdebate.repository.OpinionRepository;
 import lt.liutikas.stockdebate.repository.SubredditRepository;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -35,18 +36,24 @@ public class OpinionService {
 
     public ResponseEntity getOpinions(String subredditName, String stockSymbol, DateRange dateRange) {
 
-        Subreddit subreddit = subredditRepository.findByNameIgnoreCase(subredditName);
-        if (subreddit == null) {
-            String errorMessage = String.format("Subreddit r/%s not found", subredditName);
-            LOG.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
-        }
-
         LocalDateTime startDateTime = dateRange.getStartDate(LocalDateTime.now(clock));
-        List<Opinion> opinions = opinionRepository.
-                findAllBySubredditAndStockSymbolAndCreatedAfterOrderByCreatedAsc(
-                        subreddit, stockSymbol.toUpperCase(), startDateTime);
+        List<Opinion> opinions;
 
+        if (Strings.isBlank(subredditName)) {
+            opinions = opinionRepository.findAll();
+        } else {
+            Subreddit subreddit = subredditRepository.findByNameIgnoreCase(subredditName);
+
+            if (subreddit == null) {
+                String errorMessage = String.format("Subreddit r/%s not found", subredditName);
+                LOG.error(errorMessage);
+                return ResponseEntity.badRequest().body(errorMessage);
+            }
+
+            opinions = opinionRepository.
+                    findAllBySubredditAndStockSymbolAndCreatedAfterOrderByCreatedAsc(
+                            subreddit, stockSymbol.toUpperCase(), startDateTime);
+        }
         ArrayList<OpinionsDetail> opinionsDetails = getOpinionDetails(dateRange, opinions);
 
         SubredditOpinions subredditOpinions = new SubredditOpinions();
