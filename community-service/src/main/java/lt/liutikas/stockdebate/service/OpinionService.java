@@ -27,6 +27,7 @@ public class OpinionService {
     private final SubredditRepository subredditRepository;
     private final OpinionRepository opinionRepository;
     private final Clock clock;
+    private static final int STEPS_FOR_OPINION_AGGREGATION = 40;
 
     public OpinionService(SubredditRepository subredditRepository, OpinionRepository opinionRepository, Clock clock) {
         this.subredditRepository = subredditRepository;
@@ -71,13 +72,12 @@ public class OpinionService {
         ArrayList<OpinionsDetail> opinionsDetails = new ArrayList<>();
 
         // assuming oldest opinions are in the beginning of list
-        int steps = 25;
-        long timeStepInSeconds = dateRange.getTimeStepInSeconds(steps);
+        long timeStepInSeconds = dateRange.getTimeStepInSeconds(STEPS_FOR_OPINION_AGGREGATION);
         LocalDateTime startDate = dateRange.getStartDate(LocalDateTime.now(clock));
 
-        for (int i = 1; i <= steps; i++) {
+        for (int i = 1; i <= STEPS_FOR_OPINION_AGGREGATION; i++) {
             LocalDateTime fromDate = startDate.plusSeconds((i - 1) * timeStepInSeconds);
-            LocalDateTime toDate = i == steps ? LocalDateTime.now(clock) : startDate.plusSeconds((i) * timeStepInSeconds);
+            LocalDateTime toDate = i == STEPS_FOR_OPINION_AGGREGATION ? LocalDateTime.now(clock) : startDate.plusSeconds((i) * timeStepInSeconds);
 
             opinionsDetails.add(getOpinionDetail(opinions, fromDate, toDate));
         }
