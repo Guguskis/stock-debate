@@ -41,7 +41,10 @@ public class OpinionService {
         List<Opinion> opinions;
 
         if (Strings.isBlank(subredditName)) {
-            opinions = opinionRepository.findAll();
+            opinions = opinionRepository.findAllByStockSymbolAndCreatedAfterOrderByCreatedAsc(
+                    stockSymbol.toUpperCase(),
+                    startDateTime
+            );
         } else {
             Subreddit subreddit = subredditRepository.findByNameIgnoreCase(subredditName);
 
@@ -63,7 +66,7 @@ public class OpinionService {
         subredditOpinions.setDateRange(dateRange);
         subredditOpinions.setOpinionsDetails(opinionsDetails);
 
-        LOG.info(String.format("Retrieved '%s' opinions for subreddit r/%s of '%s'", dateRange.toString(), subredditName, stockSymbol));
+        LOG.info(String.format("Retrieved '%s' opinions for subreddit r/%s of '%s'", dateRange.toString(), Strings.isBlank(subredditName) ? "all" : subredditName, stockSymbol));
 
         return ResponseEntity.ok(subredditOpinions);
     }
