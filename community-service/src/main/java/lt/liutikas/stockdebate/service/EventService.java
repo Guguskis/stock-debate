@@ -19,7 +19,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -57,26 +56,10 @@ public class EventService {
                 .map(discussionRepository::getPosts)
                 .map(posts -> posts.stream()
                         .filter(this::ageThresholdReached)
-                        .map(post -> {
-                            String link = post.getLink();
-                            String postId = parsePostId(link);
-
-                            Subreddit subreddit = post.getSubreddit();
-                            Event existingEvent = eventRepository.findBySubredditNameAndPostId(subreddit.getName(), postId);
-
-                            if (existingEvent != null) {
-                                return null;
-                            }
-
-                            Event event = new Event();
-                            event.setAnalyzed(false);
-                            event.setSubredditName(subreddit.getName());
-                            event.setPostId(postId);
-                            return event;
-                        })
+                        .map(this::assembleEvent)
+                        .filter(this::eventUniqueForPost)
                         .collect(Collectors.toList()))
                 .flatMap(Collection::stream)
-                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         LOG.info(String.format("Saved %d new events", events.size()));
@@ -124,4 +107,21 @@ public class EventService {
             return null;
         }
     }
+
+    private Event assembleEvent(Post post) {
+        String postId = parsePostId(post.getLink());
+        Subreddit subreddit = post.getSubreddit();
+
+        Event event = new Event();
+        event.setAnalyzed(false);
+        event.setSubredditName(subreddit.getName());
+        event.setPostId(postId);
+        return event;
+    }
+
+    private boolean eventUniqueForPost(Event event) {
+        Event existingEvent = eventRepository.findBySubredditNameAndPostId(event.getSubredditName(), event.getPostId());
+        return existingEvent == null;
+    }
+
 }
