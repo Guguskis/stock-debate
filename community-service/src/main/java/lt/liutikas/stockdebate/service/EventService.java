@@ -51,18 +51,21 @@ public class EventService {
     public void runScrapePosts() {
         List<Subreddit> subreddits = subredditRepository.findAllByCollectOpinionsTrue();
 
-        List<Event> events = subreddits.stream()
-                .map(Subreddit::getName)
-                .map(discussionRepository::getPosts)
-                .map(posts -> posts.stream()
-                        .filter(this::ageThresholdReached)
-                        .map(this::assembleEvent)
-                        .filter(this::eventUniqueForPost)
-                        .collect(Collectors.toList()))
+        List<Post> posts = subreddits.stream()
+                .map(this::getSubredditPosts)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
-        LOG.info(String.format("Saved %d new events", events.size()));
+        List<Post> agedPosts = posts.stream()
+                .filter(this::ageThresholdReached)
+                .collect(Collectors.toList());
+
+        List<Event> events = agedPosts.stream()
+                .map(this::assembleEvent)
+                .filter(this::eventUniqueForPost)
+                .collect(Collectors.toList());
+
+        LOG.info(String.format("Created '%d' events from '%d/%d' posts", events.size(), agedPosts.size(), posts.size()));
         eventRepository.saveAll(events);
     }
 
@@ -116,6 +119,7 @@ public class EventService {
         event.setAnalyzed(false);
         event.setSubredditName(subreddit.getName());
         event.setPostId(postId);
+
         return event;
     }
 
@@ -124,4 +128,10 @@ public class EventService {
         return existingEvent == null;
     }
 
+    private List<Post> getSubredditPosts(Subreddit subreddit) {
+        List<Post> postsWithoutSubreddit = discussionRepository.getPosts(subreddit.getName());
+        return postsWithoutSubreddit.stream()
+                .peek(post -> post.setSubreddit(subreddit))
+                .collect(Collectors.toList());
+    }
 }
