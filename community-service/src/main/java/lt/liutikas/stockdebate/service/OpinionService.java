@@ -45,7 +45,7 @@ public class OpinionService {
         LocalDateTime startDateTime = dateRange.getStartDate(LocalDateTime.now(clock));
         List<Opinion> opinions = opinionRepository.
                 findAllBySubredditAndStockSymbolAndCreatedAfterOrderByCreatedAsc(
-                        subreddit, stockSymbol, startDateTime);
+                        subreddit, stockSymbol.toUpperCase(), startDateTime);
 
         ArrayList<OpinionsDetail> opinionsDetails = getOpinionDetails(dateRange, opinions);
 
@@ -54,6 +54,8 @@ public class OpinionService {
         subredditOpinions.setSubredditName(subredditName);
         subredditOpinions.setDateRange(dateRange);
         subredditOpinions.setOpinionsDetails(opinionsDetails);
+
+        LOG.info(String.format("Retrieved opinions for subreddit r/%s and '%s'", subredditName, stockSymbol));
 
         return ResponseEntity.ok(subredditOpinions);
     }
