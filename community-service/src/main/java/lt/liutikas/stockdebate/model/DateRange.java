@@ -5,10 +5,11 @@ import java.time.temporal.ChronoUnit;
 
 public enum DateRange {
     DAY(1, ChronoUnit.DAYS),
-    WEEK(1, ChronoUnit.WEEKS),
+    TWO_DAYS(2, ChronoUnit.DAYS),
+    FIVE_DAYS(5, ChronoUnit.DAYS),
+    TWO_WEEKS(2, ChronoUnit.WEEKS),
     MONTH(1, ChronoUnit.MONTHS),
     THREE_MONTHS(3, ChronoUnit.MONTHS),
-    SIX_MONTHS(6, ChronoUnit.MONTHS),
     YEAR(1, ChronoUnit.YEARS);
 
     private long amount;
