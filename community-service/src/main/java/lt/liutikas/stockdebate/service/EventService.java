@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class EventService {
 
     private static final int MINUTES_PER_POSTS_SCRAPE_RUN = 5;
-    private static final int POST_AGE_THRESHOLD_IN_MINUTES = 50;
+    private static final int POST_AGE_THRESHOLD_IN_MINUTES = 45;
 
     private static final Logger LOG = LoggerFactory.getLogger(EventService.class);
 
