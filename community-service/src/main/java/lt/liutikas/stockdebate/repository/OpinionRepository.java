@@ -14,4 +14,6 @@ public interface OpinionRepository extends JpaRepository<Opinion, Integer> {
     List<Opinion> findAllBySubredditAndStockSymbolAndCreatedAfterOrderByCreatedAsc(Subreddit subreddit, String stockSymbol, LocalDateTime date);
 
     List<Opinion> findAllByStockSymbolAndCreatedAfterOrderByCreatedAsc(String stockSymbols, LocalDateTime date);
+
+    List<Opinion> findAllByStockSymbolAndCreatedAfter(String stockSymbol, LocalDateTime dayBefore);
 }
