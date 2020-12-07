@@ -2,6 +2,8 @@ package lt.liutikas.stockdebate.helper;
 
 import lt.liutikas.stockdebate.helper.forecastParserFormat.*;
 import lt.liutikas.stockdebate.model.ParsedForecast;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Component
 public class ForecastParser {
+
+    private final static Logger LOG = LoggerFactory.getLogger(ForecastParser.class);
 
     private final List<ForecastParserFormat> forecastParserFormats;
 
@@ -37,9 +41,13 @@ public class ForecastParser {
         for (int i = 0; i < forecastParserFormats.size(); i++) {
             ForecastParserFormat parserFormat = forecastParserFormats.get(i);
             if (parserFormat.canParse(text)) {
-                ParsedForecast parsedForecast = parserFormat.parse(text, createdDate);
-                parsedForecast.setCreatedDate(createdDate);
-                parsedForecasts.add(parsedForecast);
+                try {
+                    ParsedForecast parsedForecast = parserFormat.parse(text, createdDate);
+                    parsedForecast.setCreatedDate(createdDate);
+                    parsedForecasts.add(parsedForecast);
+                } catch (Exception e) {
+                    LOG.warn("Failed to parse forecast", e);
+                }
                 text = parserFormat.removeForecast(text);
                 i = -1;
             }
