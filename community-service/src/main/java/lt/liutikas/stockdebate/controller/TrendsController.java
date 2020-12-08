@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.websocket.server.PathParam;
+
 @RestController
 @RequestMapping("/api")
 public class TrendsController {
@@ -17,7 +19,7 @@ public class TrendsController {
     }
 
     @GetMapping("/trends")
-    public ResponseEntity getForecast() {
-        return trendsService.getTrends();
+    public ResponseEntity getForecast(@PathParam("subreddit") String subreddit) {
+        return trendsService.getTrends(subreddit);
     }
 }
