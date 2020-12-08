@@ -39,7 +39,7 @@ public class TrendsService {
 
         List<Opinion> opinions;
 
-        if (Strings.isBlank(subredditName)) {
+        if (selectedAllSubreddits(subredditName)) {
             opinions = opinionRepository.findAll();
         } else {
             Subreddit subreddit = subredditRepository.findByNameIgnoreCase(subredditName);
@@ -71,7 +71,7 @@ public class TrendsService {
 
         List<Opinion> opinionsSinceLastDay = opinionRepository.findAllByStockSymbolAndCreatedAfter(stockSymbol, dayBefore);
 
-        if (Strings.isNotBlank(subredditName)) {
+        if (!selectedAllSubreddits(subredditName)) {
             opinionsSinceLastDay = opinionsSinceLastDay.stream()
                     .filter(opinion -> opinion.getSubreddit().getName().equalsIgnoreCase(subredditName))
                     .collect(Collectors.toList());
@@ -85,6 +85,10 @@ public class TrendsService {
         trend.setOpinionsLastDay(opinionsSinceLastDay.size());
 
         return trend;
+    }
+
+    private boolean selectedAllSubreddits(String subredditName) {
+        return Strings.isBlank(subredditName) || subredditName.equalsIgnoreCase("all");
     }
 
 }

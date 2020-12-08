@@ -40,7 +40,7 @@ public class OpinionService {
         LocalDateTime startDateTime = dateRange.getStartDate(LocalDateTime.now(clock));
         List<Opinion> opinions;
 
-        if (Strings.isBlank(subredditName)) {
+        if (selectedAllSubreddits(subredditName)) {
             opinions = opinionRepository.findAllByStockSymbolAndCreatedAfterOrderByCreatedAsc(
                     stockSymbol.toUpperCase(),
                     startDateTime
@@ -69,6 +69,10 @@ public class OpinionService {
         LOG.info(String.format("Retrieved '%s' opinions for subreddit r/%s of '%s'", dateRange.toString(), Strings.isBlank(subredditName) ? "all" : subredditName, stockSymbol));
 
         return ResponseEntity.ok(subredditOpinions);
+    }
+
+    private boolean selectedAllSubreddits(String subredditName) {
+        return Strings.isBlank(subredditName) || subredditName.equalsIgnoreCase("all");
     }
 
     private ArrayList<OpinionsDetail> getOpinionDetails(DateRange dateRange, List<Opinion> opinions) {
