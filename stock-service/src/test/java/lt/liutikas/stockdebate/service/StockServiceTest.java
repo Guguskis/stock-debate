@@ -56,7 +56,7 @@ public class StockServiceTest {
 
         ResponseEntity response = stockService.getStock("TSLA");
 
-        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(400, response.getStatusCodeValue());
     }
 
     @Test
