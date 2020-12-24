@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  authentication-service:
+    build: ./authentication-service
+    ports:
+      - 8081:8081
+    networks:
+      - stock-debate
+  community-service:
+    build: ./community-service
+    ports:
+      - 8085:8085
+    networks:
+      - stock-debate
+  discussion-service:
+    build: ./discussion-service
+    ports:
+      - 8084:8084
+    networks:
+      - stock-debate
+  stock-debate-api:
+    build: ./stock-debate-api
+    ports:
+      - 8082:8082
+    networks:
+      - stock-debate
+  stock-service:
+    build: ./stock-service
+    ports:
+      - 8083:8083
+    networks:
+      - stock-debate
+networks:
+  stock-debate:
