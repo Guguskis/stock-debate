@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserService {
 
-    private final Logger LOG = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository repository;
 

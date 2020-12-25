@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class TrendsService {
 
-    private final static Logger LOG = LoggerFactory.getLogger(TrendsService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TrendsService.class);
     private final OpinionRepository opinionRepository;
     private final StockRepository stockRepository;
     private final SubredditRepository subredditRepository;

@@ -25,7 +25,7 @@ import static lt.liutikas.stockdebate.model.ForecastType.CALL;
 @Component
 public class ForecastService {
 
-    private final Logger LOG = LoggerFactory.getLogger(ForecastService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ForecastService.class);
 
     private final ForecastParser forecastParser;
     private final StockRepository stockRepository;

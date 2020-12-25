@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Component
 public class PostService {
 
-    private final Logger LOG = LoggerFactory.getLogger(PostService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PostService.class);
 
     private final RedditRepository redditRepository;
     private final PostParser postParser;

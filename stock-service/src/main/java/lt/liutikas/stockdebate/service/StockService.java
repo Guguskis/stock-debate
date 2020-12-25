@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 public class StockService {
 
-    private final Logger LOG = LoggerFactory.getLogger(StockService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StockService.class);
 
     private final StockRepository stockRepository;
     private final IsStockRepository isStockRepository;

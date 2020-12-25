@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class OpinionService {
 
     private static final int STEPS_FOR_OPINION_AGGREGATION = 40;
-    private final Logger LOG = LoggerFactory.getLogger(OpinionService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OpinionService.class);
     private final SubredditRepository subredditRepository;
     private final OpinionRepository opinionRepository;
     private final Clock clock;

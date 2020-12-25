@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class ForecastParser {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ForecastParser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ForecastParser.class);
 
     private final List<ForecastParserFormat> forecastParserFormats;
 

@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class CommentService {
 
-    private final Logger LOG = LoggerFactory.getLogger(CommentService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CommentService.class);
 
     private final CommentsParser commentsParser;
     private final CommentRepository commentRepository;
