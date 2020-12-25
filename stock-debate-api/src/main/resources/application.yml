@@ -2,16 +2,15 @@ server:
   port: 8082
 spring:
   datasource:
-    # temporary data storage
-    url: jdbc:h2:mem:testdb
-    # temporary data storage
-    #    url: jdbc:h2:file:/data/sample
+    url: jdbc:h2:file:./Dev/h2databases/stock-debate
     driverClassName: org.h2.Driver
     username: admin
   h2:
     console:
       enabled: true
       path: /database
+      settings:
+        web-allow-others: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
