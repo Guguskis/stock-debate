@@ -18,7 +18,7 @@ public class CachingConfig {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
 
         cacheManager.setCaches(Arrays.asList(
-                new ConcurrentMapCache("trends")
+                new ConcurrentMapCache("forecasts")
         ));
 
         return cacheManager;
