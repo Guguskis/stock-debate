@@ -15,12 +15,10 @@ import java.util.List;
 
 @Repository
 public class InformationRepository {
-    private final Logger LOG = LoggerFactory.getLogger(InformationRepository.class);
-
     public static final String GET_STOCK_IEXAPI = "/stock/%s/quote?token=%s";
     public static final String GET_SINGLE_STOCK_PRICE_IEXAPI = "/stock/%s/chart/date/%s?token=%s&chartLast=1";
     public static final String TOKEN = "Tpk_e8b0d9ec6d4047d6aaeed40d580dbf94";
-
+    private static final Logger LOG = LoggerFactory.getLogger(InformationRepository.class);
     private final RestTemplate restTemplate;
 
     public InformationRepository(RestTemplate restTemplate) {

@@ -63,11 +63,11 @@ public class Post {
         this.comments = comments;
     }
 
-    public void setSubreddit(Subreddit subreddit) {
-        this.subreddit = subreddit;
-    }
-
     public Subreddit getSubreddit() {
         return subreddit;
+    }
+
+    public void setSubreddit(Subreddit subreddit) {
+        this.subreddit = subreddit;
     }
 }
