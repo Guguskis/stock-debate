@@ -1,6 +1,7 @@
 package lt.liutikas.stockdebate.controller;
 
 import lt.liutikas.stockdebate.service.TrendsService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,8 @@ public class TrendsController {
     }
 
     @GetMapping("/trends")
-    public ResponseEntity getForecast(@PathParam("subreddit") String subreddit) {
+    @Cacheable("trends")
+    public ResponseEntity getTrends(@PathParam("subreddit") String subreddit) {
         return trendsService.getTrends(subreddit);
     }
 }
