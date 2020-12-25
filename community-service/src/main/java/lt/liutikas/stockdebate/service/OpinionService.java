@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 @Component
 public class OpinionService {
 
-    private static final int STEPS_FOR_OPINION_AGGREGATION = 40;
     private static final Logger LOG = LoggerFactory.getLogger(OpinionService.class);
+    private static final int STEPS_FOR_OPINION_AGGREGATION = 40;
     private final SubredditRepository subredditRepository;
     private final OpinionRepository opinionRepository;
     private final Clock clock;

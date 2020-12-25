@@ -26,11 +26,9 @@ import java.util.stream.Collectors;
 @Component
 public class EventService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(EventService.class);
     private static final int MINUTES_PER_POSTS_SCRAPE_RUN = 5;
     private static final int POST_AGE_THRESHOLD_IN_MINUTES = 45;
-
-    private static final Logger LOG = LoggerFactory.getLogger(EventService.class);
-
     private final EventRepository eventRepository;
     private final OpinionRepository opinionRepository;
     private final DiscussionRepository discussionRepository;
