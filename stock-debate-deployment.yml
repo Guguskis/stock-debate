@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-debate-deployment
+  labels:
+    app: stock-debate
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: stock-debate
+  #      tier: backend # maybe
+  template:
+    metadata:
+      labels:
+        app: stock-debate
+    #        tier: backend
+    spec:
+      containers:
+        - name: authentication-service
+          image: authentication-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
