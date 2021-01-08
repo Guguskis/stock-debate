@@ -2,12 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: stock-debate-ingress
+  # https://github.com/kubernetes/ingress-nginx/blob/master/docs/examples/rewrite/README.md
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
     - http:
         paths:
           - pathType: Prefix
-            path: /
+            # annotation rewrite-target will remove /authentication... when redirecting to
+            # internal service (which causes path mismatching and swagger/requests not working)
+            path: /authentication(/|$)(.*)
             backend:
               service:
                 name: authentication-service
