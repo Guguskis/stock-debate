@@ -41,6 +41,7 @@
         <logback-classic.version>1.2.3</logback-classic.version>
         <log4j.version>2.13.3</log4j.version>
         <mockito-all.version>1.10.19</mockito-all.version>
+        <spring-cloud-starter-netflix-zuul.version>2.2.6.RELEASE</spring-cloud-starter-netflix-zuul.version>
     </properties>
 
     <dependencyManagement>
@@ -139,6 +140,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-cache</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+                <version>${spring-cloud-starter-netflix-zuul.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

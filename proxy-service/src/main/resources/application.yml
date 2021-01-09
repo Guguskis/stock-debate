@@ -1,0 +1,7 @@
+server:
+  port: 8090
+zuul:
+  routes:
+    foos:
+      path: /authentication/**
+      url: http://172.18.95.50/authentication
