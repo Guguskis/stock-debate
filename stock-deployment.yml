@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-deployment
+  labels:
+    app: stock-debate
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: stock-debate
+  template:
+    metadata:
+      labels:
+        app: stock-debate
+    spec:
+      containers:
+        - name: stock-service
+          image: stock-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8083
+          volumeMounts:
+            - mountPath: /Dev/h2databases
+              name: h2-databases-volume
+      volumes:
+        - name: h2-databases-volume
+          hostPath:
+            path: /h2databases
+            type: Directory
