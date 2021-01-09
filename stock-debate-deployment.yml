@@ -20,3 +20,11 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 8081
+          volumeMounts:
+            - mountPath: /Dev/h2databases
+              name: h2-databases-volume
+      volumes:
+        - name: h2-databases-volume
+          hostPath:
+            path: /h2databases
+            type: Directory
