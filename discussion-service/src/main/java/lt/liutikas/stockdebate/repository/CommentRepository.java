@@ -1,5 +1,6 @@
 package lt.liutikas.stockdebate.repository;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,11 +10,11 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class CommentRepository {
-    private static final String REDDIT_USER_PROFILE_URL = "https://old.reddit.com/user/%s?limit=100";
+    private static final String REDDIT_USER_PROFILE_URL = "/user/%s?limit=100";
 
     private final RestTemplate restTemplate;
 
-    public CommentRepository(RestTemplate restTemplate) {
+    public CommentRepository(@Qualifier("reddit") RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

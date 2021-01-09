@@ -1,5 +1,6 @@
 package lt.liutikas.stockdebate.repository;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -11,12 +12,12 @@ import org.springframework.web.client.RestTemplate;
 public class RedditRepository {
 
 
-    private static final String REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL = "https://old.reddit.com/r/%s/top/?sort=top&t=hour&limit=100";
-    private static final String GET_POST_PAGE_URL = "https://old.reddit.com/r/%s/comments/%s/";
+    private static final String REDDIT_SUBREDDIT_TOP_PAST_HOUR_URL = "/r/%s/top/?sort=top&t=hour&limit=100";
+    private static final String GET_POST_PAGE_URL = "/r/%s/comments/%s/";
 
     private final RestTemplate restTemplate;
 
-    public RedditRepository(RestTemplate restTemplate) {
+    public RedditRepository(@Qualifier("reddit") RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
