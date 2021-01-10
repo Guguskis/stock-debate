@@ -1,7 +1,24 @@
 server:
   port: 8090
+
+kubernetes:
+  ingress:
+    ip: 192.168.193.3
+
 zuul:
   routes:
-    foos:
+    authentication-service:
       path: /authentication/**
-      url: http://172.18.95.50/authentication
+      url: http://${kubernetes.ingress.ip}/authentication
+    stock-debate-api:
+      path: /stock-debate-api/**
+      url: http://${kubernetes.ingress.ip}/stock-debate-api
+    stock-service:
+      path: /stock/**
+      url: http://${kubernetes.ingress.ip}/stock
+    discussion-service:
+      path: /discussion/**
+      url: http://${kubernetes.ingress.ip}/discussion
+    community-service:
+      path: /community/**
+      url: http://${kubernetes.ingress.ip}/community
