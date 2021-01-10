@@ -1,8 +1,8 @@
 [string]$rootFolder='C:/Dev/serious/stock-debate'
 
-[bool]$startDeployments=0
+[bool]$startDeployments = 1
 [bool]$startServices=1
-[bool]$startIngress=0
+[bool]$startIngress = 1
 
 class KubernetesResource {
     [string]$module
@@ -17,23 +17,31 @@ class KubernetesResource {
 }
 
 $kubernetesResources = @(
-    [KubernetesResource]::new('authentication-service', 'authentication-service'    , 'authentication-deployment');
-    [KubernetesResource]::new('discussion-service'    , 'discussion-service'        , 'discussion-deployment');
-    [KubernetesResource]::new('community-service'     , 'community-service'         , 'community-deployment');
-    [KubernetesResource]::new('stock-service'         , 'stock-service'             , 'stock-deployment');
-    [KubernetesResource]::new('stock-debate-api'      , 'stock-debate-api-service'  , 'stock-debate-api-deployment');
+[KubernetesResource]::new('authentication-service', 'authentication-service', 'authentication-deployment');
+[KubernetesResource]::new('discussion-service', 'discussion-service', 'discussion-deployment');
+[KubernetesResource]::new('community-service', 'community-service', 'community-deployment');
+[KubernetesResource]::new('stock-service', 'stock-service', 'stock-deployment');
+[KubernetesResource]::new('stock-debate-api', 'stock-debate-api-service', 'stock-debate-api-deployment');
 )
+
 $ingressName = 'stock-debate-ingress'
 
+& minikube -p minikube docker-env | Invoke-Expression
 $kubernetesResources | ForEach-Object {
-    If($startDeployments) {
-        kubectl apply -f "$rootFolder/$($_.deployment).yml"
-    }
-    If($startServices) {
-        kubectl apply -f "$rootFolder/$($_.module)/$($_.service).yml"
-    }
+docker build -t $_.module "$rootFolder/$($_.module)"
 }
 
-If($startIngress) {
-    kubectl apply -f "$rootFolder/$ingressName.yml"
+If ($startServices) {
+$kubernetesResources | ForEach-Object {
+kubectl apply -f "$rootFolder/$($_.module)/$($_.service).yml"
+}
+}
+If ($startDeployments) {
+$kubernetesResources | ForEach-Object {
+kubectl apply -f "$rootFolder/$($_.deployment).yml"
+}
+}
+
+If ($startIngress) {
+kubectl apply -f "$rootFolder/$ingressName.yml"
 }
