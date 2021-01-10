@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: stock-debate-api-deployment
   labels:
-    app: stock-debate
+    app: stock-debate-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stock-debate
+      app: stock-debate-api
   template:
     metadata:
       labels:
-        app: stock-debate
+        app: stock-debate-api
     spec:
       containers:
         - name: stock-debate-api

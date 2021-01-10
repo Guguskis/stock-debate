@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: authentication-deployment
+  name: authentication-service-deployment
   labels:
-    app: stock-debate
+    app: authentication-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: stock-debate
+      app: authentication-service
   template:
     metadata:
       labels:
-        app: stock-debate
+        app: authentication-service
     spec:
       containers:
         - name: authentication-service

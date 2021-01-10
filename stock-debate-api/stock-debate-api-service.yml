@@ -4,7 +4,7 @@ metadata:
   name: stock-debate-api-service
 spec:
   selector:
-    app: stock-debate
+    app: stock-debate-api
   ports:
     - protocol: TCP
       port: 8082

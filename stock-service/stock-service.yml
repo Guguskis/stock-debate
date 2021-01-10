@@ -4,7 +4,7 @@ metadata:
   name: stock-service
 spec:
   selector:
-    app: stock-debate
+    app: stock-service
   ports:
     - protocol: TCP
       port: 8083

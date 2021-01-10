@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: discussion-deployment
+  name: discussion-service-deployment
   labels:
-    app: stock-debate
+    app: discussion-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stock-debate
+      app: discussion-service
   template:
     metadata:
       labels:
-        app: stock-debate
+        app: discussion-service
     spec:
       containers:
         - name: discussion-service

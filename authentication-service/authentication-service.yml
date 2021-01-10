@@ -4,7 +4,7 @@ metadata:
   name: authentication-service
 spec:
   selector:
-    app: stock-debate
+    app: authentication-service
   ports:
     - protocol: TCP
       port: 8081
