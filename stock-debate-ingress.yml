@@ -17,7 +17,7 @@ spec:
               service:
                 name: authentication-service
                 port:
-                  number: 8081
+                  number: 8080
           - pathType: Prefix
             path: /stock-debate-api(/|$)(.*)
             backend:
