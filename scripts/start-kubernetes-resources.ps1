@@ -45,7 +45,7 @@ If ($startServices) {
 If ($startDeployments) {
     Write-Output "----------------starting kubernetes deployments---------------------------------"
     $kubernetesResources | ForEach-Object {
-        kubectl apply -f "$rootFolder/$($_.deployment).yml"
+        kubectl apply -f "$rootFolder/$($_.module)/$($_.deployment).yml"
     }
 } else {
     Write-Output "----------------kubernetes deployments start was turned off---------------------"
