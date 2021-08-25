@@ -27,7 +27,7 @@ $ingressName = 'stock-debate-ingress'
 
 $kubernetesResources | ForEach-Object {
     If($stopDeployments) {
-        kubectl delete -f "$rootFolder/$($_.deployment).yml"
+        kubectl delete -f "$rootFolder/($_.module)/$($_.deployment).yml"
     }
     If($stopServices) {
         kubectl delete -f "$rootFolder/$($_.module)/$($_.service).yml"
