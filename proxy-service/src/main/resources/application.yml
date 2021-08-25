@@ -1,9 +1,9 @@
 server:
-  port: 8090
+  port: 9080
 
 kubernetes:
   ingress:
-    ip: 192.168.193.3
+    ip: 172.20.95.18
 
 zuul:
   routes:
@@ -22,3 +22,28 @@ zuul:
     community-service:
       path: /community/**
       url: http://${kubernetes.ingress.ip}/community
+
+#server:
+#  port: 9080
+#
+#kubernetes:
+#  ingress:
+#    ip: 172.17.120.212
+#
+#zuul:
+#  routes:
+#    authentication-service:
+#      path: /search-service/**
+#      url: http://${kubernetes.ingress.ip}/search-service
+##    stock-debate-api:
+##      path: /stock-debate-api/**
+##      url: http://${kubernetes.ingress.ip}/stock-debate-api
+##    stock-service:
+##      path: /stock/**
+##      url: http://${kubernetes.ingress.ip}/stock
+##    discussion-service:
+##      path: /discussion/**
+##      url: http://${kubernetes.ingress.ip}/discussion
+##    community-service:
+##      path: /community/**
+##      url: http://${kubernetes.ingress.ip}/community
