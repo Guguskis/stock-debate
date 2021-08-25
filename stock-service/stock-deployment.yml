@@ -19,7 +19,7 @@ spec:
           image: stock-service
           imagePullPolicy: Never
           ports:
-            - containerPort: 8083
+            - containerPort: 8080
           volumeMounts:
             - mountPath: /Dev/h2databases
               name: h2-databases-volume

@@ -4,6 +4,6 @@ RUN apk add --no-cache --upgrade curl
 
 COPY /target/*.jar app.jar
 
-EXPOSE 8084
+EXPOSE 8080
 
 ENTRYPOINT [ "java", "-jar", "app.jar"]

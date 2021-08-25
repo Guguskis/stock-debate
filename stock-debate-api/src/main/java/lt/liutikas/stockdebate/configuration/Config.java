@@ -29,7 +29,7 @@ public class Config {
     @Qualifier("discussion")
     public RestTemplate getDiscussionRestTemplate() {
         return new RestTemplateBuilder()
-                .rootUri("http://discussion-service:8084")
+                .rootUri("http://discussion-service:8080")
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class Config {
     @Qualifier("stock")
     public RestTemplate getStockRestTemplate() {
         return new RestTemplateBuilder()
-                .rootUri("http://stock-service:8083")
+                .rootUri("http://stock-service:8080")
                 .build();
     }
 
