@@ -1,4 +1,4 @@
-[string]$rootFolder='C:/Dev/serious/stock-debate'
+[string]$rootFolder='C:/Dev/cloud/stock-debate'
 
 [bool]$stopDeployments=1
 [bool]$stopServices=1
