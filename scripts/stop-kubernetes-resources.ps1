@@ -35,5 +35,5 @@ $kubernetesResources | ForEach-Object {
 }
 
 If($stopIngress) {
-    kubectl delete -f "$rootFolder/$ingressName.yml"
+    kubectl delete -f "$rootFolder/iac/$ingressName.yml"
 }
