@@ -53,7 +53,7 @@ If ($startDeployments) {
 
 If ($startIngress) {
     Write-Output "----------------starting kubernetes ingress-------------------------------------"
-    kubectl apply -f "$rootFolder/iac/$ingressName.yml"
+    kubectl apply -f "$rootFolder/iac/resources/$ingressName.yml"
 } else {
     Write-Output "----------------kubernetes ingress start was turned off-------------------------"
 }
